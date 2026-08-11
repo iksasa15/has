@@ -298,11 +298,11 @@
     <div class="col">
       <div class="tip">
         <div class="compass"><div class="needle" style="transform:rotate(0deg);"></div><div class="dot"></div></div>
-        <div class="tip-text"><h3>لا تؤجّل البدايـــة</h3><p>قد يبدو الأسبوع الأول خفيفًا لكنه يرسم الفصل كاملاً. وكل مهمة تنجزها اليوم، هي عبء أقل تحمله غدًا.</p></div>
+        <div class="tip-text"><h3>لا تؤجّل البدايـة</h3><p>قد يبدو الأسبوع الأول خفيفًا لكنه يرسم الفصل كاملاً. وكل مهمة تنجزها اليوم، هي عبء أقل تحمله غدًا.</p></div>
       </div>
       <div class="tip">
         <div class="compass"><div class="needle" style="transform:rotate(72deg);"></div><div class="dot"></div></div>
-        <div class="tip-text"><h3>اســأل بثقـــة</h3><p>ليس السؤال دليلًا على الجهل، بل رغبة في الفهم. وكل إجابة تحصل عليها اليوم، تختصر عليك كثيرًا من التردد.</p></div>
+        <div class="tip-text"><h3>اسـأل بثقـة</h3><p>ليس السؤال دليلًا على الجهل، بل رغبة في الفهم. وكل إجابة تحصل عليها اليوم، تختصر عليك كثيرًا من التردد.</p></div>
       </div>
       <div class="tip">
         <div class="compass"><div class="needle" style="transform:rotate(144deg);"></div><div class="dot"></div></div>
@@ -312,11 +312,11 @@
     <div class="col" style="display:flex; flex-direction:column;">
       <div class="tip">
         <div class="compass"><div class="needle" style="transform:rotate(216deg);"></div><div class="dot"></div></div>
-        <div class="tip-text"><h3>عش التجربة كامـلـة</h3><p>درجاتك جزء من رحلتك لكنها ليست الرحلة كلها. شارك، تعلّم، واصنع لنفسك ذكريات تستحق أن تُروى بعد التخرج.</p></div>
+        <div class="tip-text"><h3>عش التجربة كامـلة</h3><p>درجاتك جزء من رحلتك لكنها ليست الرحلة كلها. شارك، تعلّم، واصنع لنفسك ذكريات تستحق أن تُروى بعد التخرج.</p></div>
       </div>
       <div class="tip">
         <div class="compass"><div class="needle" style="transform:rotate(288deg);"></div><div class="dot"></div></div>
-        <div class="tip-text"><h3>نظّم وقتك قبل أن ينظّمك الـوقـت</h3><p>المهام الجامعية لا تتراكم فجأة بل تتسلل بهدوء. وما تكتبه في جدولك اليوم، لن يطاردك غدًا.</p></div>
+        <div class="tip-text"><h3>نظّم وقتك قبل أن ينظّمك الوقت</h3><p>المهام الجامعية لا تتراكم فجأة بل تتسلل بهدوء. وما تكتبه في جدولك اليوم، لن يطاردك غدًا.</p></div>
       </div>
       <div class="quote-box">
         <div class="quote-mark">”</div>
@@ -361,45 +361,61 @@
 </section>
 
 <script>
-/* كشيدة ديناميكية للفقرات متعددة الأسطر — توازن الحواف بدون تمديد مفرط */
+/* كشيدة خفيفة للفقرات العريضة فقط — حد أقصى كشيدة واحدة لكل كلمة، بدون تكديس */
 (function () {
   const TATWEEL = '\u0640';
-  const CONNECT = /[\u0627-\u064A\u067E\u0686\u06AF\u06A9]/;
+  const CONNECT = /[\u0621-\u064A\u067E\u0686\u06AF\u06A9\u0649\u064A]/;
+  const NON_STRETCH = new Set(['ا','أ','إ','آ','ء','ؤ','ئ','ة','ى','و','د','ذ','ر','ز','ﻻ','لأ','لإ','لآ']);
 
   function canStretch(ch, next) {
     if (!ch || !next) return false;
     if (ch === ' ' || next === ' ' || ch === TATWEEL || next === TATWEEL) return false;
     if ('،.؛:!؟()[]{}«»"\''.includes(ch) || '،.؛:!؟()[]{}«»"\''.includes(next)) return false;
+    if (NON_STRETCH.has(ch)) return false;
     return CONNECT.test(ch) && CONNECT.test(next);
   }
 
   function insertKashida(text, count) {
-    const slots = [];
-    for (let i = 0; i < text.length - 1; i++) {
-      if (canStretch(text[i], text[i + 1])) slots.push(i + 1);
+    // مرشّحات لكل كلمة على حدة — كشيدة واحدة كحد أقصى لكل كلمة (≥4 أحرف)
+    const words = text.split(/(\s+)/);
+    const candidates = [];
+    for (let wi = 0; wi < words.length; wi++) {
+      const w = words[wi];
+      if (!w || /^\s+$/.test(w) || w.replace(TATWEEL, '').length < 4) continue;
+      const slots = [];
+      for (let i = 0; i < w.length - 1; i++) {
+        if (canStretch(w[i], w[i + 1])) slots.push(i + 1);
+      }
+      if (!slots.length) continue;
+      // فضّل منتصف الكلمة
+      const mid = slots[Math.floor(slots.length / 2)];
+      candidates.push({ wi, at: mid, len: w.length });
     }
-    if (!slots.length || count <= 0) return text;
-    const picks = [];
-    for (let c = 0; c < count; c++) picks.push(slots[c % slots.length]);
-    picks.sort((a, b) => b - a);
-    let out = text;
-    for (const i of picks) out = out.slice(0, i) + TATWEEL + out.slice(i);
-    return out;
+    if (!candidates.length || count <= 0) return text;
+    candidates.sort((a, b) => b.len - a.len);
+    const take = candidates.slice(0, Math.min(count, candidates.length));
+    take.sort((a, b) => b.wi - a.wi);
+    for (const { wi, at } of take) {
+      const w = words[wi];
+      words[wi] = w.slice(0, at) + TATWEEL + w.slice(at);
+    }
+    return words.join('');
   }
 
   function justifyEl(el) {
     if (!el || el.dataset.kashida === '1') return;
-    const raw = el.textContent.trim();
-    if (raw.length < 24) return;
+    // أعمدة النصائح ضيقة — لا تُطبَّق عليها كشيدة تلقائية
+    if (el.closest('.tip-text')) return;
+    const raw = el.textContent.trim().replace(/\u0640+/g, '');
+    if (raw.length < 40) return;
     el.dataset.kashida = '1';
     el.style.textAlign = 'justify';
     el.style.textAlignLast = 'right';
     el.textContent = raw;
 
     const width = el.clientWidth;
-    if (width < 40) return;
+    if (width < 120) return;
 
-    // قس أسطرًا عبر تقسيم تقريبي ثم أضف كشيدة خفيفة لكل سطر ناقص
     const words = raw.split(/\s+/);
     const probe = document.createElement('span');
     probe.style.cssText = 'position:absolute;visibility:hidden;white-space:nowrap;font:' + getComputedStyle(el).font;
@@ -419,14 +435,14 @@
     }
     if (cur) lines.push(cur);
 
+    const fs = parseFloat(getComputedStyle(el).fontSize) || 12;
     const justified = lines.map((line, idx) => {
-      if (idx === lines.length - 1) return line; // آخر سطر بدون كشيدة زائدة
+      if (idx === lines.length - 1) return line;
       probe.textContent = line;
       const gap = width - probe.offsetWidth;
-      if (gap < 4) return line;
-      // تقريب: كل كشيدة ≈ 0.35em من عرض الخط
-      const fs = parseFloat(getComputedStyle(el).fontSize) || 12;
-      const n = Math.min(8, Math.max(1, Math.round(gap / (fs * 0.28))));
+      if (gap < 10) return line;
+      // خفيف: كشيدة واحدة تقريبًا لكل 0.55em ناقص، وبحد أقصى 3 لكل سطر
+      const n = Math.min(3, Math.max(1, Math.round(gap / (fs * 0.55))));
       return insertKashida(line, n);
     });
 
@@ -434,7 +450,7 @@
     el.textContent = justified.join(' ');
   }
 
-  document.querySelectorAll('.tip-text p, .app-desc, .say-card p, .map-text').forEach(justifyEl);
+  document.querySelectorAll('.app-desc, .say-card p, .map-text').forEach(justifyEl);
 })();
 </script>
 
