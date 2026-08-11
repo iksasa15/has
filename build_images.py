@@ -310,6 +310,10 @@ def page_apps():
         shadow_rect(img, box, radius=mm(4), fill=fill, shadow=14, blur=10, offset=(0, 5))
         d = ImageDraw.Draw(img)
         x0, y0, x1, y1 = box
+        # bottom accent strip inside card
+        accent = CORAL_DEEP if y0 < mid else SAGE_DEEP
+        d.rounded_rectangle([x0 + mm(1), y1 - mm(4), x1 - mm(1), y1 - mm(1)], radius=mm(1.5), fill=accent)
+
         icon_s = mm(14)
         ix1, iy0 = x1 - mm(5), y0 + mm(6)
         paste(img, icon, (ix1 - icon_s, iy0, ix1, iy0 + icon_s))
@@ -322,7 +326,7 @@ def page_apps():
         )
         wrap(
             d,
-            (x0 + mm(5), iy0 + icon_s + mm(8), x1 - mm(5), y1 - mm(5)),
+            (x0 + mm(5), iy0 + icon_s + mm(8), x1 - mm(5), y1 - mm(8)),
             body,
             fnt("regular", 20),
             MUTED,
