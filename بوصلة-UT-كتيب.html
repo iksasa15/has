@@ -3,9 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <title>بوصلة UT — مذكرة مستجد (نظام تصميم ناعم)</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
+  @font-face{ font-family:'thmanyah'; src:url('fonts/thmanyahsans-Light.otf') format('opentype'); font-weight:300; font-style:normal; }
+  @font-face{ font-family:'thmanyah'; src:url('fonts/thmanyahsans-Regular.otf') format('opentype'); font-weight:400; font-style:normal; }
+  @font-face{ font-family:'thmanyah'; src:url('fonts/thmanyahsans-Medium.otf') format('opentype'); font-weight:500; font-style:normal; }
+  @font-face{ font-family:'thmanyah'; src:url('fonts/thmanyahsans-Bold.otf') format('opentype'); font-weight:700; font-style:normal; }
+  @font-face{ font-family:'thmanyah'; src:url('fonts/thmanyahsans-Black.otf') format('opentype'); font-weight:800; font-style:normal; }
+
   :root{
     --ink:#3B5249;
     --base:#EDE7D4;
@@ -28,8 +32,8 @@
     --radius-md:9mm;
     --radius-lg:14mm;
     --shadow-soft:0 3mm 8mm rgba(59,82,73,0.10);
-    --font-display:'Almarai', 'IBM Plex Sans Arabic', sans-serif;
-    --font-body:'IBM Plex Sans Arabic', 'Almarai', sans-serif;
+    --font-display:'thmanyah', sans-serif;
+    --font-body:'thmanyah', sans-serif;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   html,body{background:#d9d5c4;}
@@ -56,7 +60,6 @@
   .divider-gold{
     width:16mm; height:1mm; background:var(--accent); border-radius:1mm;
   }
-  /* compass signature element */
   .compass{
     width:9mm; height:9mm; border-radius:50%;
     border:0.5mm solid var(--brand);
@@ -65,41 +68,41 @@
   }
   .compass .needle{
     position:absolute; width:0.6mm; height:3.4mm; background:var(--accent);
-    top:1mm; left:50%; transform-origin:50% 3.5mm; border-radius:1mm;
+    top:1mm; left:50%; margin-left:-0.3mm; transform-origin:50% 3.5mm; border-radius:1mm;
   }
   .compass .dot{
-    width:1mm; height:1mm; border-radius:50%; background:var(--brand);
+    width:1.2mm; height:1.2mm; border-radius:50%; background:var(--brand); z-index:1;
   }
+  .compass.sm{ width:7mm; height:7mm; }
+  .compass.sm .needle{ height:2.6mm; top:0.8mm; transform-origin:50% 2.7mm; }
   .page-foot{
     margin-top:auto;
     display:flex; align-items:center; justify-content:space-between;
-    font-family:var(--font-body); font-weight:300; font-size:7.5pt; color:var(--brand);
+    font-weight:300; font-size:7.5pt; color:var(--brand);
     padding-top:6mm;
   }
-  .page-foot .num{font-weight:500; letter-spacing:0.3px;}
+  .page-foot .num{ font-weight:500; letter-spacing:0.3px; display:flex; align-items:center; gap:2mm; }
 
-  /* ---------- PAGE 1 : COVER ---------- */
+  .logo-img{ display:block; object-fit:contain; }
+  .cover-logo-img{ width:42mm; height:auto; }
+  .foot-logo-img{ width:36mm; height:auto; }
+  .say-logo-img{ width:28mm; height:auto; margin-top:4mm; align-self:center; }
+
   .cover{ align-items:center; text-align:center; }
   .cover-topbar{
-    width:100%; display:flex; justify-content:space-between; font-size:8pt; font-weight:500; color:var(--brand); letter-spacing:0.2px;
+    width:100%; display:flex; justify-content:space-between; font-size:8pt; font-weight:500; color:var(--brand);
   }
   .cover-mid{
     flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5mm; position:relative;
   }
   .cover-mid .bg-compass{
-    position:absolute; width:120mm; height:120mm; opacity:0.05; top:50%; left:50%; transform:translate(-50%,-50%);
+    position:absolute; width:120mm; height:120mm; opacity:0.06; top:50%; left:50%; transform:translate(-50%,-50%);
   }
   .cover-title{ font-family:var(--font-display); font-weight:800; font-size:46pt; color:var(--ink); line-height:1; }
   .cover-sub{ font-family:var(--font-display); font-weight:400; font-size:15pt; color:var(--brand); }
-  .cover-logo{
-    width:22mm; height:22mm; border-radius:50%; background:var(--brand-tint);
-    border:0.4mm solid var(--brand); display:flex; align-items:center; justify-content:center;
-    font-family:var(--font-display); font-weight:800; font-size:12pt; color:var(--brand);
-  }
-  .cover-foot{ font-size:7.5pt; color:var(--ink); opacity:0.6; }
+  .cover-foot{ font-size:7.5pt; color:var(--ink); opacity:0.65; }
 
-  /* ---------- PAGE 2 : APPS ---------- */
-  .apps-title{ font-family:var(--font-display); font-weight:700; font-size:16pt; margin-bottom:7mm; }
+  .apps-title{ font-family:var(--font-display); font-weight:700; font-size:15pt; margin-bottom:7mm; line-height:1.45; }
   .apps-grid{ flex:1; display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; gap:5mm; }
   .app-cell{ border-radius:var(--radius-md); padding:4mm; display:flex; align-items:stretch; }
   .app-cell.top{ background:var(--coral-tint); }
@@ -110,14 +113,14 @@
   }
   .app-head{ display:flex; align-items:center; gap:2.5mm; }
   .app-icon{
-    width:9mm; height:9mm; border-radius:50%; flex-shrink:0;
-    display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-weight:700; font-size:9pt; color:#fff;
+    width:10mm; height:10mm; border-radius:22%; flex-shrink:0; overflow:hidden;
+    box-shadow:0 1mm 2mm rgba(59,82,73,0.12);
   }
+  .app-icon img{ width:100%; height:100%; object-fit:cover; display:block; }
   .app-name-en{ font-family:var(--font-display); font-weight:700; font-size:10pt; }
   .app-name-ar{ font-size:8pt; color:var(--brand); font-weight:500; }
   .app-desc{ font-size:7.6pt; line-height:1.55; color:var(--ink); opacity:0.85; }
 
-  /* ---------- PAGE 3 : TIPS ---------- */
   .tips-head{ display:flex; gap:3mm; margin-bottom:7mm; }
   .tips-head .rule{ width:0.7mm; background:var(--accent); border-radius:1mm; flex-shrink:0; }
   .tips-head h2{ font-family:var(--font-display); font-weight:700; font-size:13pt; line-height:1.5; }
@@ -134,7 +137,6 @@
   .quote-mark{ font-family:var(--font-display); font-size:26pt; color:var(--brand); opacity:0.5; line-height:0.6; }
   .quote-box .hint{ font-size:7pt; color:var(--brand); opacity:0.75; }
 
-  /* ---------- PAGE 4 : MAP ---------- */
   .map-page{ background:var(--brand); color:#fff; border-radius:0; padding:0; }
   .map-inner{
     flex:1; margin:6mm; border-radius:var(--radius-lg); background:var(--brand);
@@ -146,29 +148,29 @@
     background:radial-gradient(circle at 30% 70%, #fff 0, transparent 45%),
                radial-gradient(circle at 75% 30%, #fff 0, transparent 40%);
   }
-  .map-band{ background:var(--sky-tint); color:var(--ink); border-radius:var(--radius-sm); padding:3mm 4mm; font-size:8pt; font-weight:500; align-self:flex-start; }
-  .map-title{ font-family:var(--font-display); font-weight:800; font-size:24pt; margin:8mm 0 4mm; }
-  .map-text{ font-size:9pt; line-height:1.7; max-width:80mm; opacity:0.92; }
+  .map-band{ background:var(--sky-tint); color:var(--ink); border-radius:var(--radius-sm); padding:3mm 4mm; font-size:8pt; font-weight:500; align-self:flex-start; position:relative; z-index:1; }
+  .map-title{ font-family:var(--font-display); font-weight:800; font-size:24pt; margin:8mm 0 4mm; position:relative; z-index:1; }
+  .map-text{ font-size:9pt; line-height:1.7; max-width:80mm; opacity:0.92; position:relative; z-index:1; }
   .map-cta{
     margin-top:8mm; background:var(--accent); color:var(--ink); font-weight:700; font-family:var(--font-display);
-    border-radius:20mm; padding:4mm 6mm; font-size:9pt; display:inline-block; align-self:flex-start;
+    border-radius:20mm; padding:4mm 6mm; font-size:9pt; display:inline-block; align-self:flex-start; position:relative; z-index:1;
   }
-  .map-qr-row{ margin-top:auto; display:flex; justify-content:flex-end; align-items:flex-end; gap:3mm; }
-  .qr-box{ width:22mm; height:22mm; background:#fff; border-radius:3mm; padding:2mm; }
-  .qr-box svg{ width:100%; height:100%; }
-  .qr-label{ font-size:6.8pt; opacity:0.8; max-width:22mm; text-align:center; }
+  .map-qr-row{ margin-top:auto; display:flex; justify-content:flex-end; align-items:flex-end; gap:3mm; position:relative; z-index:1; }
+  .qr-box{
+    width:24mm; height:24mm; background:#fff; border-radius:3mm; padding:2mm;
+    box-shadow:var(--shadow-soft); overflow:hidden;
+  }
+  .qr-box img{ width:100%; height:100%; object-fit:contain; display:block; }
+  .qr-label{ font-size:6.8pt; opacity:0.85; max-width:24mm; text-align:center; }
 
-  /* ---------- PAGE 5 : QUOTES ---------- */
   .say-page{ align-items:center; }
   .say-card{
     background:#fff; border-radius:var(--radius-md); box-shadow:var(--shadow-soft);
-    padding:9mm 8mm; flex:1; display:flex; flex-direction:column; justify-content:center; gap:4.5mm;
+    padding:9mm 8mm; flex:1; display:flex; flex-direction:column; justify-content:center; gap:4.5mm; width:100%;
   }
   .say-card p{ font-size:8.6pt; line-height:1.8; opacity:0.9; }
   .say-card .closing{ font-family:var(--font-display); font-weight:700; font-size:11pt; color:var(--brand); margin-top:2mm; line-height:1.6; }
-  .say-logo{ margin-top:6mm; align-self:center; }
 
-  /* ---------- PAGE 6 : COLORS ---------- */
   .colors-title{ font-family:var(--font-display); font-weight:700; font-size:15pt; margin-bottom:6mm; }
   .swatch-group{ margin-bottom:5mm; }
   .swatch-group h4{ font-size:7.6pt; color:var(--brand); font-weight:500; margin-bottom:2mm; }
@@ -181,10 +183,6 @@
   .colors-foot{
     margin-top:auto; background:var(--brand); color:#fff; border-radius:var(--radius-md);
     padding:5mm; display:flex; flex-direction:column; align-items:center; gap:1.5mm; text-align:center;
-  }
-  .colors-foot .u-logo{
-    width:14mm; height:14mm; border-radius:50%; border:0.4mm solid #fff; display:flex; align-items:center; justify-content:center;
-    font-family:var(--font-display); font-weight:700; font-size:8pt; margin-bottom:2mm;
   }
   .colors-foot .ar{ font-size:8.5pt; font-weight:600; }
   .colors-foot .en{ font-size:7pt; opacity:0.85; }
@@ -199,40 +197,36 @@
 </head>
 <body>
 
-<!-- shared compass SVG template used via inline markup per instance -->
-
-<!-- ===================== PAGE 1 — COVER ===================== -->
 <section class="page cover">
   <div class="cover-topbar">
-    <span>Aug. 23, 2026</span>
     <span>الطبعة الأولى</span>
+    <span>Aug. 23, 2026</span>
   </div>
   <div class="cover-mid">
-    <svg class="bg-compass" viewBox="0 0 100 100">
+    <svg class="bg-compass" viewBox="0 0 100 100" aria-hidden="true">
       <circle cx="50" cy="50" r="46" fill="none" stroke="#7473B3" stroke-width="0.6"/>
       <circle cx="50" cy="50" r="30" fill="none" stroke="#7473B3" stroke-width="0.4"/>
       <line x1="50" y1="4" x2="50" y2="96" stroke="#7473B3" stroke-width="0.4"/>
       <line x1="4" y1="50" x2="96" y2="50" stroke="#7473B3" stroke-width="0.4"/>
-      <polygon points="50,20 55,50 50,80 45,50" fill="#F8B624" opacity="0.8"/>
+      <polygon points="50,20 55,50 50,80 45,50" fill="#F8B624" opacity="0.85"/>
     </svg>
     <div class="cover-title">بوصلة UT</div>
     <div class="cover-sub">مذكرة مستجد</div>
     <div class="divider-gold"></div>
   </div>
   <div style="display:flex; flex-direction:column; align-items:center; gap:3mm;">
-    <div class="cover-logo">UT</div>
+    <img class="logo-img cover-logo-img" src="_assets/ut-logo.png" alt="جامعة تبوك">
     <div class="cover-foot">جامعة تبوك · عمادة شؤون الطلاب</div>
   </div>
 </section>
 
-<!-- ===================== PAGE 2 — APPS ===================== -->
 <section class="page">
   <div class="apps-title">تطبيقات ستسهل عليك رحلتك الجامعية..</div>
   <div class="apps-grid">
     <div class="app-cell top">
       <div class="app-card">
         <div class="app-head">
-          <div class="app-icon" style="background:var(--coral-line);">B</div>
+          <div class="app-icon"><img src="_assets/app-blackboard.png" alt="Blackboard"></div>
           <div><div class="app-name-en">Blackboard</div><div class="app-name-ar">بلاك بورد</div></div>
         </div>
         <div class="divider-gold"></div>
@@ -242,7 +236,7 @@
     <div class="app-cell top">
       <div class="app-card">
         <div class="app-head">
-          <div class="app-icon" style="background:var(--coral-line);">خ</div>
+          <div class="app-icon"><img src="_assets/app-khata.png" alt="Khata"></div>
           <div><div class="app-name-en">Khata</div><div class="app-name-ar">خطة</div></div>
         </div>
         <div class="divider-gold"></div>
@@ -252,7 +246,7 @@
     <div class="app-cell bottom">
       <div class="app-card">
         <div class="app-head">
-          <div class="app-icon" style="background:var(--mint-line);">N</div>
+          <div class="app-icon"><img src="_assets/app-notion.png" alt="Notion"></div>
           <div><div class="app-name-en">Notion</div><div class="app-name-ar">نوشن</div></div>
         </div>
         <div class="divider-gold"></div>
@@ -262,7 +256,7 @@
     <div class="app-cell bottom">
       <div class="app-card">
         <div class="app-head">
-          <div class="app-icon" style="background:var(--mint-line);">F</div>
+          <div class="app-icon"><img src="_assets/app-forest.png" alt="Forest"></div>
           <div><div class="app-name-en">Forest</div><div class="app-name-ar">فوريست</div></div>
         </div>
         <div class="divider-gold"></div>
@@ -270,10 +264,12 @@
       </div>
     </div>
   </div>
-  <div class="page-foot"><span class="num">2 / 6</span><span>بوصلة UT</span></div>
+  <div class="page-foot">
+    <span class="num"><span class="compass sm"><span class="needle" style="transform:rotate(60deg);"></span><span class="dot"></span></span>2 / 6</span>
+    <span>بوصلة UT</span>
+  </div>
 </section>
 
-<!-- ===================== PAGE 3 — TIPS ===================== -->
 <section class="page">
   <div class="tips-head">
     <div class="rule"></div>
@@ -282,25 +278,25 @@
   <div class="tips-body">
     <div class="col">
       <div class="tip">
-        <div class="compass"><div class="needle" style="transform:rotate(0deg);"></div></div>
+        <div class="compass"><div class="needle" style="transform:rotate(0deg);"></div><div class="dot"></div></div>
         <div class="tip-text"><h3>لا تؤجل البداية</h3><p>قد يبدو الأسبوع الأول خفيفًا لكنه يرسم الفصل كاملاً. وكل مهمة تنجزها اليوم، هي عبء أقل تحمله غدًا.</p></div>
       </div>
       <div class="tip">
-        <div class="compass"><div class="needle" style="transform:rotate(72deg);"></div></div>
+        <div class="compass"><div class="needle" style="transform:rotate(72deg);"></div><div class="dot"></div></div>
         <div class="tip-text"><h3>اسأل بثقة</h3><p>ليس السؤال دليلًا على الجهل، بل رغبة في الفهم. وكل إجابة تحصل عليها اليوم، تختصر عليك كثيرًا من التردد.</p></div>
       </div>
       <div class="tip">
-        <div class="compass"><div class="needle" style="transform:rotate(144deg);"></div></div>
+        <div class="compass"><div class="needle" style="transform:rotate(144deg);"></div><div class="dot"></div></div>
         <div class="tip-text"><h3>اجعل للمراجعة موعدًا</h3><p>لا تجعل كتبك لا تعرفك إلا ليلة الاختبار. دقائق قليلة بعد كل محاضرة قد تغنيك عن ساعات طويلة من القلق.</p></div>
       </div>
     </div>
     <div class="col" style="display:flex; flex-direction:column;">
       <div class="tip">
-        <div class="compass"><div class="needle" style="transform:rotate(216deg);"></div></div>
+        <div class="compass"><div class="needle" style="transform:rotate(216deg);"></div><div class="dot"></div></div>
         <div class="tip-text"><h3>عش التجربة كاملة</h3><p>درجاتك جزء من رحلتك لكنها ليست الرحلة كلها. شارك، تعلّم، واصنع لنفسك ذكريات تستحق أن تُروى بعد التخرج.</p></div>
       </div>
       <div class="tip">
-        <div class="compass"><div class="needle" style="transform:rotate(288deg);"></div></div>
+        <div class="compass"><div class="needle" style="transform:rotate(288deg);"></div><div class="dot"></div></div>
         <div class="tip-text"><h3>نظّم وقتك قبل أن ينظّمك الوقت</h3><p>المهام الجامعية لا تتراكم فجأة بل تتسلل بهدوء. وما تكتبه في جدولك اليوم، لن يطاردك غدًا.</p></div>
       </div>
       <div class="quote-box">
@@ -309,10 +305,12 @@
       </div>
     </div>
   </div>
-  <div class="page-foot"><span class="num">3 / 6</span><span>بوصلة UT</span></div>
+  <div class="page-foot">
+    <span class="num"><span class="compass sm"><span class="needle" style="transform:rotate(120deg);"></span><span class="dot"></span></span>3 / 6</span>
+    <span>بوصلة UT</span>
+  </div>
 </section>
 
-<!-- ===================== PAGE 4 — MAP ===================== -->
 <section class="page map-page">
   <div class="map-inner">
     <div class="map-band">دليل الوجهة</div>
@@ -322,27 +320,12 @@
     <div class="map-qr-row">
       <div class="qr-label">امسح للخريطة التفاعلية</div>
       <div class="qr-box">
-        <svg viewBox="0 0 29 29" shape-rendering="crispEdges">
-          <rect width="29" height="29" fill="#fff"/>
-          <g fill="#3B5249">
-            <rect x="0" y="0" width="7" height="7"/><rect x="1" y="1" width="5" height="5" fill="#fff"/><rect x="2" y="2" width="3" height="3"/>
-            <rect x="22" y="0" width="7" height="7"/><rect x="23" y="1" width="5" height="5" fill="#fff"/><rect x="24" y="2" width="3" height="3"/>
-            <rect x="0" y="22" width="7" height="7"/><rect x="1" y="23" width="5" height="5" fill="#fff"/><rect x="2" y="24" width="3" height="3"/>
-            <rect x="9" y="1" width="1" height="1"/><rect x="11" y="1" width="2" height="1"/><rect x="15" y="2" width="1" height="2"/><rect x="18" y="1" width="1" height="1"/>
-            <rect x="9" y="9" width="4" height="4"/><rect x="16" y="9" width="1" height="1"/><rect x="18" y="10" width="2" height="1"/>
-            <rect x="9" y="15" width="1" height="4"/><rect x="12" y="16" width="2" height="2"/><rect x="16" y="15" width="4" height="1"/>
-            <rect x="9" y="20" width="2" height="2"/><rect x="13" y="20" width="1" height="3"/><rect x="16" y="21" width="3" height="2"/>
-            <rect x="20" y="9" width="1" height="6"/><rect x="22" y="11" width="4" height="1"/><rect x="22" y="14" width="2" height="2"/>
-            <rect x="20" y="17" width="1" height="1"/><rect x="22" y="18" width="1" height="4"/><rect x="24" y="17" width="3" height="1"/>
-            <rect x="20" y="22" width="2" height="2"/><rect x="24" y="22" width="1" height="1"/><rect x="26" y="24" width="2" height="2"/>
-          </g>
-        </svg>
+        <img src="_assets/qr-map.png" alt="QR الخريطة التفاعلية">
       </div>
     </div>
   </div>
 </section>
 
-<!-- ===================== PAGE 5 — SAY ===================== -->
 <section class="page say-page">
   <div class="say-card">
     <p>قالوا إن الجامعة مرحلة صعبة، مليئة بالعقبات، ولم يقولوا إنها رحلة يتعاقب فيها العسر واليسر، وتُصنع فيها الحكايات بينهما.</p>
@@ -350,12 +333,14 @@
     <p>وقالوا إن الجامعة ليست إلا آيبادًا وقهوةً وروتينًا مملًا، ولم يذكروا أنها مساحة واسعة لاكتشاف ذاتك، وصقل مهاراتك، وبناء شخصيتك بعيدًا عن مقاعد الدراسة.</p>
     <p>قالوا الكثير، فلا تجعل ما قيل لك يرسم تجربتك قبل أن تعيشها. لا تكن معلّقًا في مهبّ الأقوال، بل خض تجربتك بنفسك، واصنع قصتك بطريقتك، وكن أنت من يمسك بدفّة سفينته، ويوجهها نحو المرفأ الذي ينشده.</p>
     <div class="closing">فالجامعة لا تُروى كما قيلت لك... بل كما عشتها أنت</div>
-    <div class="say-logo cover-logo" style="width:14mm; height:14mm; font-size:8pt;">UT</div>
+    <img class="logo-img say-logo-img" src="_assets/ut-logo.png" alt="جامعة تبوك">
   </div>
-  <div class="page-foot"><span class="num">5 / 6</span><span>بوصلة UT</span></div>
+  <div class="page-foot">
+    <span class="num"><span class="compass sm"><span class="needle" style="transform:rotate(240deg);"></span><span class="dot"></span></span>5 / 6</span>
+    <span>بوصلة UT</span>
+  </div>
 </section>
 
-<!-- ===================== PAGE 6 — COLORS ===================== -->
 <section class="page">
   <div class="colors-title">دليل الألوان</div>
 
@@ -391,7 +376,7 @@
   </div>
 
   <div class="colors-foot">
-    <div class="u-logo">UT</div>
+    <img class="logo-img foot-logo-img" src="_assets/ut-logo-white.png" alt="جامعة تبوك">
     <div class="ar">عمادة شؤون الطلاب</div>
     <div class="en">Deanship of Students' Affairs</div>
     <div class="ed">كتيب أرشدني · نسخة 48</div>
