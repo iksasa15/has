@@ -14,8 +14,9 @@ ROOT = Path(__file__).resolve().parent
 FONTS = ROOT / "fonts"
 OUT_DIR = ROOT / "pages"
 PDF_OUT = ROOT / "بوصلة-UT-كتيب.pdf"
-UT_LOGO = ROOT / "_assets" / "ut-logo.png"
-UT_LOGO_WHITE = ROOT / "_assets" / "ut-logo-white.png"
+ASSETS = ROOT / "_assets"
+UT_LOGO = ASSETS / "ut-logo.png"
+UT_LOGO_WHITE = ASSETS / "ut-logo-white.png"
 HAS_RAQM = features.check("raqm")
 
 # Brand
@@ -28,21 +29,21 @@ MAGENTA = (0xFF, 0x5C, 0xB6)
 CYAN = (0x51, 0x9C, 0xF2)
 PLUM = (0x65, 0x18, 0x53)
 LEAF = (0x5B, 0xB3, 0x4E)
+CORAL = (0xE2, 0x96, 0x8F)
+SAGE = (0xAB, 0xC7, 0x97)
+BROWN = (0x5C, 0x3D, 0x2E)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GRAY = (200, 200, 200)
-CREAM_LINE = (0xC5, 0xBF, 0xA8)
+DARK = (0x2A, 0x2A, 0x2A)
 
-# A5 @ 300 DPI
 DPI = 300
 W = int(148 / 25.4 * DPI)  # 1748
 H = int(210 / 25.4 * DPI)  # 2480
-MARGIN = int(1.6 / 25.4 * DPI)
+MARGIN = int(1.5 / 25.4 * DPI)
 
 
 def ar(text: str) -> str:
-    """Shape Arabic for Pillow. With raqm/HarfBuzz, pass text through unchanged
-    — reshape+bidi would reverse glyphs a second time."""
     if not text:
         return text
     if HAS_RAQM:
@@ -58,8 +59,7 @@ def font(weight: str, size: float) -> ImageFont.FreeTypeFont:
         "bold": "thmanyahsans-Bold.otf",
         "black": "thmanyahsans-Black.otf",
     }
-    path = FONTS / files[weight]
-    return ImageFont.truetype(str(path), int(size))
+    return ImageFont.truetype(str(FONTS / files[weight]), int(size))
 
 
 def mm(v: float) -> int:
@@ -75,29 +75,20 @@ def text_size(draw: ImageDraw.ImageDraw, text: str, fnt) -> tuple[int, int]:
     return bbox[2] - bbox[0], bbox[3] - bbox[1]
 
 
-def draw_text(
-    draw: ImageDraw.ImageDraw,
-    xy: tuple[float, float],
-    text: str,
-    fnt,
-    fill=BLACK,
-    anchor: str = "mm",
-    arabic: bool = True,
-):
+def draw_text(draw, xy, text, fnt, fill=BLACK, anchor="mm", arabic=True):
     t = ar(text) if arabic else text
     draw.text(xy, t, font=fnt, fill=fill, anchor=anchor)
 
 
 def draw_multiline_rtl(
-    draw: ImageDraw.ImageDraw,
-    box: tuple[int, int, int, int],
-    text: str,
+    draw,
+    box,
+    text,
     fnt,
     fill=BLACK,
-    line_spacing: float = 1.35,
-    align: str = "right",
+    line_spacing=1.4,
+    align="right",
 ):
-    """Word-wrap Arabic paragraph inside box (x0,y0,x1,y1)."""
     x0, y0, x1, y1 = box
     max_w = x1 - x0
     words = text.split()
@@ -114,11 +105,10 @@ def draw_multiline_rtl(
     if cur:
         lines.append(cur)
 
-    ascent = fnt.size
-    step = int(ascent * line_spacing)
+    step = int(fnt.size * line_spacing)
     y = y0
     for line in lines:
-        if y + step > y1:
+        if y + step > y1 + step:
             break
         shaped = ar(line)
         if align == "right":
@@ -131,12 +121,22 @@ def draw_multiline_rtl(
     return y
 
 
-def rounded_rect(draw, box, radius, outline=GRAY, width=2, fill=None):
-    draw.rounded_rectangle(box, radius=radius, outline=outline, width=width, fill=fill)
+def paste_fit(base: Image.Image, path: Path, box, bg_round=False):
+    if not path.exists():
+        return
+    logo = Image.open(path).convert("RGBA")
+    x0, y0, x1, y1 = box
+    bw, bh = max(1, x1 - x0), max(1, y1 - y0)
+    lw, lh = logo.size
+    scale = min(bw / lw, bh / lh)
+    nw, nh = max(1, int(lw * scale)), max(1, int(lh * scale))
+    logo = logo.resize((nw, nh), Image.Resampling.LANCZOS)
+    px = x0 + (bw - nw) // 2
+    py = y0 + (bh - nh) // 2
+    base.paste(logo, (px, py), logo)
 
 
 def sparkle(draw, cx, cy, size, color=GOLD):
-    """8-point sparkle."""
     pts = []
     for i in range(8):
         ang = math.radians(i * 45 - 90)
@@ -148,18 +148,41 @@ def sparkle(draw, cx, cy, size, color=GOLD):
     draw.rectangle([cx - size, cy - w, cx + size, cy + w], fill=color)
 
 
-def logo_placeholder(draw, box, color=WHITE):
-    x0, y0, x1, y1 = box
-    draw.rectangle(box, outline=color, width=3)
-    cx, cy = (x0 + x1) / 2, (y0 + y1) / 2 + (y1 - y0) * 0.05
-    r = (x1 - x0) * 0.28
-    # arch via arc
-    draw.arc([cx - r, cy - r * 0.3, cx + r, cy + r * 1.2], 200, 340, fill=color, width=3)
-    for i in range(-4, 5):
-        ang = math.radians(-90 + i * 12)
-        x2 = cx + math.cos(ang) * r * 1.15
-        y2 = cy - 8 + math.sin(ang) * r * 1.15
-        draw.line([(cx, cy - 6), (x2, y2)], fill=color, width=2)
+def draw_footer_band(img: Image.Image):
+    d = ImageDraw.Draw(img)
+    band_h = mm(20)
+    y0 = H - band_h
+    d.rectangle([0, y0, W, H], fill=PURPLE)
+    cy = y0 + band_h // 2
+    pad = mm(2)
+
+    sparkle(d, mm(7), cy - mm(1), mm(2.4))
+    sparkle(d, mm(13), cy + mm(2.5), mm(1.6))
+
+    draw_text(d, (mm(20), cy - mm(2.5)), "عمادة شؤون الطلاب", font("bold", 15), WHITE, "lm")
+    draw_text(
+        d,
+        (mm(20), cy + mm(3.5)),
+        "Deanship of Students' Affairs",
+        font("light", 10),
+        WHITE,
+        "lm",
+        arabic=False,
+    )
+
+    logo_h = band_h - mm(5)
+    logo_w = min(int(logo_h * 3.0), mm(44))
+    lx0 = W // 2 - logo_w // 2
+    paste_fit(img, UT_LOGO_WHITE, (lx0, y0 + pad, lx0 + logo_w, H - pad))
+
+    div_x = lx0 + logo_w + mm(2.5)
+    d.line([(div_x, cy - mm(5)), (div_x, cy + mm(5))], fill=WHITE, width=1)
+    draw_text(d, (div_x + mm(3), cy - mm(2.5)), "كتيب أرشدني", font("bold", 18), WHITE, "lm")
+    draw_text(d, (div_x + mm(3), cy + mm(4)), "نسخة 48", font("light", 14), WHITE, "lm")
+
+    sparkle(d, W - mm(7), cy - mm(1.5), mm(1.8))
+    sparkle(d, W - mm(13), cy + mm(2), mm(2.4))
+    sparkle(d, W - mm(19), cy - mm(2.5), mm(1.4))
 
 
 # ─── Pages ───────────────────────────────────────────────────────────────────
@@ -169,70 +192,112 @@ def page_cover() -> Image.Image:
     img = new_page(WHITE)
     d = ImageDraw.Draw(img)
 
-    # Top meta
-    draw_text(d, (MARGIN, MARGIN + mm(2)), "الطبعة الأولى", font("regular", 28), BLACK, "lt")
-    draw_text(d, (W - MARGIN, MARGIN + mm(2)), "Aug. 23, 2026", font("light", 26), BLACK, "rt", arabic=False)
+    # RTL meta: Arabic edition on the right, date on the left
+    draw_text(d, (W - MARGIN, MARGIN + mm(3)), "الطبعة الأولى", font("regular", 28), BLACK, "rt")
+    draw_text(
+        d, (MARGIN, MARGIN + mm(3)), "Aug. 23, 2026", font("light", 26), BLACK, "lt", arabic=False
+    )
 
-    # Title block upper-center
-    cy = mm(55)
-    draw_text(d, (W // 2, cy), "بوصلة UT", font("black", 110), BLACK, "mm")
-    draw_text(d, (W // 2, cy + mm(16)), "مذكرة مستجد", font("medium", 42), BLACK, "mm")
+    cy = mm(52)
+    draw_text(d, (W // 2, cy), "بوصلة UT", font("black", 108), BLACK, "mm")
+    draw_text(d, (W // 2, cy + mm(16)), "مذكرة مستجد", font("medium", 40), BLACK, "mm")
 
-    # Gold accent rule
     rw = mm(28)
     ry = cy + mm(24)
     d.rectangle([W // 2 - rw // 2, ry, W // 2 + rw // 2, ry + mm(1.1)], fill=GOLD)
 
-    # University of Tabuk logo — bottom center
     logo_h = mm(14)
     logo_w = mm(42)
-    paste_logo(
+    paste_fit(
         img,
         UT_LOGO,
         (W // 2 - logo_w // 2, H - MARGIN - logo_h, W // 2 + logo_w // 2, H - MARGIN),
     )
-
     return img
 
 
-def page_name() -> Image.Image:
-    img = new_page(PURPLE)
+def page_apps() -> Image.Image:
+    img = new_page(WHITE)
     d = ImageDraw.Draw(img)
 
-    # Name field near top
-    y = mm(40)
-    label = ar("اسمك الكريم")
-    lf = font("medium", 32)
-    lw, _ = text_size(d, label, lf)
-    # line then label on the right (RTL): label at right, line extends left
-    right = W - MARGIN
-    d.text((right, y), label, font=lf, fill=WHITE, anchor="rm")
-    line_x1 = right - lw - mm(4)
-    line_x0 = MARGIN + mm(10)
-    d.line([(line_x0, y + mm(1)), (line_x1, y + mm(1))], fill=WHITE, width=2)
-
-    # Center message
-    mid = H // 2 - mm(5)
+    header_h = mm(28)
+    d.rectangle([0, 0, W, header_h], fill=CREAM)
     draw_text(
         d,
-        (W // 2, mid),
-        "صممنا هذي النسخة الاستثنائية لك .. حتى",
-        font("bold", 36),
-        WHITE,
+        (W // 2, header_h // 2),
+        "تطبيقات ستسهل عليك رحلتك الجامعية..",
+        font("bold", 34),
+        BLACK,
         "mm",
     )
-    draw_text(d, (W // 2, mid + mm(12)), "تكون دليلك الأول", font("bold", 36), WHITE, "mm")
 
-    # Signature + date
-    by = H - mm(45)
-    col_w = (W - 2 * MARGIN) // 2
-    # left: توقيعك
-    cx1 = MARGIN + col_w // 2
-    cx2 = MARGIN + col_w + col_w // 2
-    draw_text(d, (cx1, by), "توقيعك", font("light", 28), WHITE, "mm")
-    d.line([(cx1 - mm(22), by + mm(10)), (cx1 + mm(22), by + mm(10))], fill=WHITE, width=2)
-    draw_text(d, (cx2, by), "التاريخ", font("light", 28), WHITE, "mm")
-    d.line([(cx2 - mm(22), by + mm(10)), (cx2 + mm(22), by + mm(10))], fill=WHITE, width=2)
+    # 2x2 grid
+    gap = mm(0)
+    top = header_h
+    mid_y = top + (H - top) // 2
+    mid_x = W // 2
+
+    # backgrounds
+    d.rectangle([0, top, mid_x, mid_y], fill=CORAL)
+    d.rectangle([mid_x, top, W, mid_y], fill=CORAL)
+    d.rectangle([0, mid_y, mid_x, H], fill=SAGE)
+    d.rectangle([mid_x, mid_y, W, H], fill=SAGE)
+
+    apps = [
+        # (box, icon, title_en, title_ar, body) — visual: left-top Blackboard, right-top Khata
+        (
+            (0, top, mid_x, mid_y),
+            ASSETS / "app-blackboard.png",
+            "Blackboard",
+            "بلاك بورد",
+            "المنصة الأكاديمية الرسمية للجامعة؛ تمكنك من متابعة المحاضرات، تسليم الواجبات، واطلاعك على الإعلانات والدرجات أولاً بأول.",
+        ),
+        (
+            (mid_x, top, W, mid_y),
+            ASSETS / "app-khata.png",
+            "Khata",
+            "خطة",
+            "حاسبتك ومنظمك الأكاديمي؛ يساعدك على حساب ومتابعة معدلك التراكمي (GPA)، تنظيم الجدول الدراسي، وتتبع الدرجات بسهولة.",
+        ),
+        (
+            (0, mid_y, mid_x, H),
+            ASSETS / "app-notion.png",
+            "Notion",
+            "نوشن",
+            "المساحة الشاملة لتنظيم حياتك الدراسية؛ تُستخدم لتدوين الملاحظات، ترتيب المهام، وإدارة المشاريع بأسلوب عصري.",
+        ),
+        (
+            (mid_x, mid_y, W, H),
+            ASSETS / "app-forest.png",
+            "Forest",
+            "فوريست",
+            "تطبيق مبتكر للتركيز والتخلص من تشتت الهاتف؛ ينمي لك شجرة افتراضية كلما ابتعدت عن جوالك وركزت في مذاكرتك.",
+        ),
+    ]
+
+    pad = mm(5)
+    icon_s = mm(14)
+    for box, icon, en, ar_name, body in apps:
+        x0, y0, x1, y1 = box
+        # icon on the right
+        ix1 = x1 - pad
+        iy0 = y0 + pad
+        paste_fit(img, icon, (ix1 - icon_s, iy0, ix1, iy0 + icon_s))
+
+        title = f"{en} ({ar_name}):"
+        title_x = ix1 - icon_s - mm(2)
+        draw_text(d, (title_x, iy0 + icon_s // 2), title, font("bold", 22), BROWN, "rm")
+
+        body_top = iy0 + icon_s + mm(3)
+        draw_multiline_rtl(
+            d,
+            (x0 + pad, body_top, x1 - pad, y1 - pad),
+            body,
+            font("regular", 18),
+            DARK,
+            line_spacing=1.35,
+            align="right",
+        )
 
     return img
 
@@ -276,7 +341,7 @@ def page_tips() -> Image.Image:
         (
             "03",
             "اجعل للمراجعة موعدًا",
-            "لا تجعل كتبك لا تعرفك إلا ليلة الاختبار.. دقائق قليلة بعد كل محاضرة قد تغنيك عن ساعات طويلة من القلق.",
+            "لا تجعل كتبك لا تعرفك إلا ليلة الاختبار. دقائق قليلة بعد كل محاضرة قد تغنيك عن ساعات طويلة من القلق.",
         ),
         (
             "04",
@@ -290,276 +355,227 @@ def page_tips() -> Image.Image:
         ),
     ]
 
-    # Grid: right col = 01,02,03 | left col = 04,05,quote
     gap = mm(6)
     top = hy + mm(24)
-    bottom = H - MARGIN - mm(4)
+    bottom = H - MARGIN
     mid_x = W // 2
-    col_r = (mid_x + gap // 2, top, W - MARGIN, bottom)
-    col_l = (MARGIN, top, mid_x - gap // 2, bottom)
-
     cell_h = (bottom - top) // 3
 
     def tip_cell(box, num, title, body):
         x0, y0, x1, y1 = box
-        draw_text(d, (x1, y0), f"{num}  {title}", font("bold", 28), BLACK, "rt")
+        draw_text(d, (x1, y0), f"{num}  {title}", font("bold", 27), BLACK, "rt")
         draw_multiline_rtl(
             d,
             (x0, y0 + mm(9), x1, y1 - mm(2)),
             body,
-            font("regular", 20),
-            BLACK,
-            line_spacing=1.45,
+            font("regular", 19),
+            DARK,
+            line_spacing=1.4,
             align="right",
         )
 
-    # Right column tips 01-03
+    # Right column 01-03, left 04-05 + quote
     for i, tip in enumerate(tips[:3]):
         y0 = top + i * cell_h
-        tip_cell((col_r[0], y0, col_r[2], y0 + cell_h - mm(3)), *tip)
-
-    # Left column tips 04-05
+        tip_cell((mid_x + gap // 2, y0, W - MARGIN, y0 + cell_h - mm(3)), *tip)
     for i, tip in enumerate(tips[3:]):
         y0 = top + i * cell_h
-        tip_cell((col_l[0], y0, col_l[2], y0 + cell_h - mm(3)), *tip)
+        tip_cell((MARGIN, y0, mid_x - gap // 2, y0 + cell_h - mm(3)), *tip)
 
     # Quote box bottom-left
-    qx0, qy0 = col_l[0], top + 2 * cell_h
-    qx1, qy1 = col_l[2], bottom
-    rounded_rect(d, [qx0 + mm(2), qy0 + mm(2), qx1 - mm(2), qy1 - mm(2)], radius=mm(6), outline=GRAY, width=2)
-    # big quote mark
+    qx0, qy0 = MARGIN, top + 2 * cell_h
+    qx1, qy1 = mid_x - gap // 2, bottom
+    d.rounded_rectangle(
+        [qx0 + mm(1), qy0 + mm(2), qx1 - mm(1), qy1 - mm(2)],
+        radius=mm(5),
+        outline=GRAY,
+        width=2,
+    )
     draw_text(
         d,
-        (qx0 + mm(8), qy0 + mm(10)),
+        (qx0 + mm(7), qy0 + mm(10)),
         "”",
-        font("black", 90),
+        font("black", 88),
         PURPLE,
         "lt",
         arabic=False,
     )
-    draw_multiline_rtl(
-        d,
-        (qx0 + mm(8), qy0 + mm(28), qx1 - mm(8), qy1 - mm(6)),
-        "مساحة لاقتباسك المفضّل أو ملاحظة شخصية…",
-        font("medium", 22),
-        PURPLE,
-        align="right",
-    )
-
     return img
 
 
-def paste_logo(base: Image.Image, logo_path: Path, box: tuple[int, int, int, int]):
-    """Paste logo scaled to fit inside box (x0,y0,x1,y1), centered, keep aspect."""
-    if not logo_path.exists():
-        d = ImageDraw.Draw(base)
-        logo_placeholder(d, list(box), WHITE)
-        return
-    logo = Image.open(logo_path).convert("RGBA")
-    x0, y0, x1, y1 = box
-    bw, bh = x1 - x0, y1 - y0
-    lw, lh = logo.size
-    scale = min(bw / lw, bh / lh)
-    nw, nh = max(1, int(lw * scale)), max(1, int(lh * scale))
-    logo = logo.resize((nw, nh), Image.Resampling.LANCZOS)
-    px = x0 + (bw - nw) // 2
-    py = y0 + (bh - nh) // 2
-    base.paste(logo, (px, py), logo)
-
-
-def draw_footer_band(img: Image.Image):
+def page_map() -> Image.Image:
+    """أين وجهتك؟ — purple frame with blue strip + QR."""
+    img = new_page(PASTEL_BLUE)
     d = ImageDraw.Draw(img)
-    band_h = mm(22)
-    y0 = H - band_h
-    d.rectangle([0, y0, W, H], fill=PURPLE)
 
-    cy = y0 + band_h // 2
-    pad = mm(2.5)
+    # Purple panel with concave corners (notches)
+    panel = [MARGIN, MARGIN, W - mm(18), H - MARGIN]
+    px0, py0, px1, py1 = panel
+    d.rounded_rectangle(panel, radius=mm(4), fill=PURPLE)
 
-    # Left sparkles
-    sparkle(d, mm(8), cy - mm(2), mm(2.8))
-    sparkle(d, mm(15), cy + mm(3), mm(1.8))
+    # Concave notches at corners via blue circles
+    notch_r = mm(7)
+    for cx, cy in (
+        (px0, py0),
+        (px1, py0),
+        (px0, py1),
+        (px1, py1),
+    ):
+        d.ellipse([cx - notch_r, cy - notch_r, cx + notch_r, cy + notch_r], fill=PASTEL_BLUE)
 
-    # Deanship text
-    draw_text(d, (mm(22), cy - mm(3)), "عمادة شؤون الطلاب", font("bold", 16), WHITE, "lm")
+    # Text inside panel (right aligned)
+    tx1 = px1 - mm(10)
+    tx0 = px0 + mm(10)
+    ty = py0 + mm(18)
+    draw_text(d, (tx1, ty), "أين وجهتك؟", font("black", 52), WHITE, "rt")
+
+    body = (
+        "سواء كنت متجهًا إلى عمادة شؤون الطلاب، أو تبحث عن المكتبة المركزية أو كليتك، "
+        "ستساعدك الخريطة التفاعلية على الوصول بسهولة."
+    )
+    draw_multiline_rtl(
+        d,
+        (tx0, ty + mm(16), tx1, ty + mm(55)),
+        body,
+        font("regular", 26),
+        WHITE,
+        line_spacing=1.45,
+        align="right",
+    )
+
     draw_text(
         d,
-        (mm(22), cy + mm(4)),
-        "Deanship of Students' Affairs",
-        font("light", 11),
-        WHITE,
-        "lm",
-        arabic=False,
+        (tx1, ty + mm(62)),
+        "امسح الرمز وابدأ رحلتك داخل المدينة الجامعية !",
+        font("bold", 24),
+        CORAL,
+        "rt",
     )
 
-    # University of Tabuk logo (official white lockup)
-    logo_h = band_h - mm(6)
-    logo_w = int(logo_h * (800 / 261))  # approx aspect of ut-logo-white
-    logo_w = min(logo_w, mm(48))
-    lx0 = W // 2 - logo_w // 2
-    paste_logo(img, UT_LOGO_WHITE, (lx0, y0 + pad, lx0 + logo_w, H - pad))
-
-    # Divider
-    div_x = lx0 + logo_w + mm(3)
-    d.line([(div_x, cy - mm(6)), (div_x, cy + mm(6))], fill=WHITE, width=1)
-
-    # Booklet title
-    draw_text(d, (div_x + mm(4), cy - mm(3)), "كتيب أرشدني", font("bold", 20), WHITE, "lm")
-    draw_text(d, (div_x + mm(4), cy + mm(5)), "نسخة 48", font("light", 15), WHITE, "lm")
-
-    # Right sparkles
-    sparkle(d, W - mm(8), cy - mm(2), mm(2.0))
-    sparkle(d, W - mm(15), cy + mm(2), mm(2.8))
-    sparkle(d, W - mm(22), cy - mm(3), mm(1.6))
-
-
-def page_content() -> Image.Image:
-    img = new_page(CREAM)
-    d = ImageDraw.Draw(img)
-
-    draw_text(d, (W - MARGIN, MARGIN + mm(8)), "محتوى القسم", font("black", 52), GREEN, "rt")
-    # gold rule under title (right aligned short)
-    d.rectangle([W - MARGIN - mm(26), MARGIN + mm(20), W - MARGIN, MARGIN + mm(21.2)], fill=GOLD)
-
-    draw_multiline_rtl(
-        d,
-        (MARGIN, MARGIN + mm(28), W - MARGIN, MARGIN + mm(55)),
-        "هذه صفحة محتوى داخلية جاهزة للتعديل. ضع هنا فقرات القسم، جداول التعريف، أو أي محتوى تحتاجه. الخلفية الكريمية والفوتر البنفسجي يعكسان هوية كتيب أرشدني.",
-        font("regular", 26),
-        GREEN,
-        line_spacing=1.5,
-        align="right",
-    )
-
-    # Color chips
-    draw_text(d, (W - MARGIN, MARGIN + mm(62)), "توزيع الألوان", font("medium", 24), GREEN, "rt")
-
-    primaries = [
-        (GREEN, "أخضر", WHITE),
-        (CREAM, "كريمي", GREEN),
-        (PURPLE, "بنفسجي", WHITE),
-        (GOLD, "ذهبي", GREEN),
-    ]
-    secondaries = [
-        (PASTEL_BLUE, "سماوي", GREEN),
-        (MAGENTA, "وردي", WHITE),
-        (CYAN, "أزرق", WHITE),
-        (PLUM, "برقوقي", WHITE),
-        (LEAF, "أخضر فاتح", WHITE),
-    ]
-
-    chip_h = mm(16)
-    gap = mm(3)
-    y = MARGIN + mm(70)
-    # primary row — RTL so first chip on the right
-    chip_w = (W - 2 * MARGIN - 3 * gap) // 4
-    for i, (col, label, tc) in enumerate(primaries):
-        x1 = W - MARGIN - i * (chip_w + gap)
-        x0 = x1 - chip_w
-        d.rounded_rectangle([x0, y, x1, y + chip_h], radius=mm(2), fill=col)
-        draw_text(d, ((x0 + x1) // 2, y + chip_h // 2), label, font("bold", 20), tc, "mm")
-        # hex small
-        hex_c = "#{:02X}{:02X}{:02X}".format(*col)
-        draw_text(
-            d,
-            ((x0 + x1) // 2, y + chip_h + mm(4)),
-            hex_c,
-            font("light", 14),
-            GREEN,
-            "mm",
-            arabic=False,
-        )
-
-    y2 = y + chip_h + mm(12)
-    chip_w2 = (W - 2 * MARGIN - 4 * gap) // 5
-    for i, (col, label, tc) in enumerate(secondaries):
-        x1 = W - MARGIN - i * (chip_w2 + gap)
-        x0 = x1 - chip_w2
-        d.rounded_rectangle([x0, y2, x1, y2 + chip_h], radius=mm(2), fill=col)
-        draw_text(d, ((x0 + x1) // 2, y2 + chip_h // 2), label, font("bold", 16), tc, "mm")
-
-    draw_footer_band(img)
+    # QR bottom-right of panel, overlapping blue strip
+    qr_s = mm(38)
+    qx1 = W - mm(8)
+    qy1 = H - mm(14)
+    qx0 = qx1 - qr_s
+    qy0 = qy1 - qr_s
+    # white pad
+    d.rounded_rectangle([qx0 - mm(2), qy0 - mm(2), qx1 + mm(2), qy1 + mm(2)], radius=mm(2), fill=WHITE)
+    paste_fit(img, ASSETS / "qr-map.png", (qx0, qy0, qx1, qy1))
     return img
 
 
-def page_notes() -> Image.Image:
-    img = new_page(CREAM)
-    d = ImageDraw.Draw(img)
-
-    draw_text(d, (W - MARGIN, MARGIN + mm(8)), "ملاحظاتي", font("black", 48), GREEN, "rt")
-    d.rectangle([W - MARGIN - mm(22), MARGIN + mm(18), W - MARGIN, MARGIN + mm(19.2)], fill=GOLD)
-
-    # Lined area
-    top = MARGIN + mm(28)
-    bottom = H - mm(28)
-    line_gap = mm(10)
-    y = top
-    while y < bottom:
-        d.line([(MARGIN, y), (W - MARGIN, y)], fill=CREAM_LINE, width=2)
-        y += line_gap
-
-    draw_footer_band(img)
-    return img
-
-
-def page_palette_ref() -> Image.Image:
-    """Bonus creative divider / palette splash page."""
+def page_essay() -> Image.Image:
     img = new_page(WHITE)
     d = ImageDraw.Draw(img)
 
-    # Split layout: purple left band, cream right — but RTL so purple on right
-    split = int(W * 0.42)
-    d.rectangle([W - split, 0, W, H], fill=PURPLE)
-    d.rectangle([0, 0, W - split, H], fill=CREAM)
+    paragraphs = [
+        "قالوا إن الجامعة مرحلة صعبة، مليئة بالعقبات، ولم يقولوا إنها رحلة يتعاقب فيها العسر واليسر، وتُصنع فيها الحكايات بينهما.",
+        "وقالوا: لا تصدّق أحدًا، فالكل سيستغلك؛ ولم يقولوا إنك ستجد فيها أناسًا يحبون العطاء، ويبذلون من وقتهم وجهدهم ما يجعل أيامك أيسر وأجمل.",
+        "وقالوا إن الجامعة ليست إلا آيبادًا وقهوةً وروتينًا مملًا، ولم يذكروا أنها مساحة واسعة لاكتشاف ذاتك، وصقل مهاراتك، وبناء شخصيتك بعيدًا عن مقاعد الدراسة.",
+        "قالوا الكثير، فلا تجعل ما قيل لك يرسم تجربتك قبل أن تعيشها. لا تكن معلّقًا في مهبّ الأقوال، بل خض تجربتك بنفسك، واصنع قصتك بطريقتك، وكن أنت من يمسك بدفّة سفينته، ويوجهها نحو المرفأ الذي ينشده.",
+        "فالجامعة لا تُروى كما قيلت لك... بل كما عشتها أنت",
+    ]
 
-    draw_text(d, (W - split // 2, mm(40)), "بوصلة", font("black", 72), WHITE, "mm")
-    draw_text(d, (W - split // 2, mm(55)), "UT", font("black", 64), GOLD, "mm", arabic=False)
+    y = MARGIN + mm(10)
+    body_f = font("regular", 24)
+    last_f = font("bold", 26)
+    for i, para in enumerate(paragraphs):
+        fnt = last_f if i == len(paragraphs) - 1 else body_f
+        y = draw_multiline_rtl(
+            d,
+            (MARGIN, y, W - MARGIN, H - mm(28)),
+            para,
+            fnt,
+            DARK if i < len(paragraphs) - 1 else GREEN,
+            line_spacing=1.55,
+            align="right",
+        )
+        y += mm(5)
 
-    draw_text(d, ((W - split) // 2, mm(50)), "هويّة بصرية", font("bold", 40), GREEN, "mm")
-    draw_text(
-        d,
-        ((W - split) // 2, mm(65)),
-        "قالب بصري جاهز للطباعة",
-        font("regular", 24),
-        GREEN,
-        "mm",
+    # small logo bottom
+    logo_h = mm(10)
+    logo_w = mm(32)
+    paste_fit(
+        img,
+        UT_LOGO,
+        (W // 2 - logo_w // 2, H - MARGIN - logo_h, W // 2 + logo_w // 2, H - MARGIN // 2),
     )
+    return img
 
-    # accent dots
-    colors = [GOLD, PURPLE, GREEN, MAGENTA, CYAN]
-    for i, c in enumerate(colors):
-        cx = (W - split) // 2 - mm(20) + i * mm(10)
-        d.ellipse([cx - mm(3), mm(80), cx + mm(3), mm(86)], fill=c)
 
-    sparkle(d, W - split // 2, H - mm(40), mm(6), GOLD)
-    sparkle(d, W - split // 2 - mm(14), H - mm(32), mm(3.5), GOLD)
+def page_palette() -> Image.Image:
+    img = new_page(WHITE)
+    d = ImageDraw.Draw(img)
 
+    draw_text(d, (W - MARGIN, MARGIN + mm(6)), "توزيع الألوان", font("black", 42), GREEN, "rt")
+    d.rectangle([W - MARGIN - mm(24), MARGIN + mm(16), W - MARGIN, MARGIN + mm(17.2)], fill=GOLD)
+
+    draw_text(d, (W - MARGIN, MARGIN + mm(28)), "أساسي", font("bold", 28), BLACK, "rt")
+
+    primaries = [
+        (GREEN, "#3B5249"),
+        (CREAM, "#EDE7D4"),
+        (PURPLE, "#7473B3"),
+        (GOLD, "#F8B624"),
+    ]
+    gap = mm(3)
+    chip_h = mm(28)
+    y = MARGIN + mm(36)
+    chip_w = (W - 2 * MARGIN - 3 * gap) // 4
+    for i, (col, hexcode) in enumerate(primaries):
+        x1 = W - MARGIN - i * (chip_w + gap)
+        x0 = x1 - chip_w
+        d.rounded_rectangle([x0, y, x1, y + chip_h], radius=mm(2), fill=col)
+        tc = GREEN if col in (CREAM, GOLD) else WHITE
+        draw_text(d, ((x0 + x1) // 2, y + chip_h // 2), hexcode, font("bold", 18), tc, "mm", arabic=False)
+
+    # divider
+    dy = y + chip_h + mm(14)
+    d.line([(MARGIN, dy), (W - MARGIN, dy)], fill=BLACK, width=2)
+    draw_text(d, (W - MARGIN, dy + mm(8)), "فرعي", font("bold", 28), BLACK, "rt")
+
+    secondaries = [
+        (PASTEL_BLUE, "#B5C9E4"),
+        (MAGENTA, "#FF5CB6"),
+        (CYAN, "#519CF2"),
+        (PLUM, "#651853"),
+        (LEAF, "#5BB34E"),
+    ]
+    y2 = dy + mm(18)
+    chip_w2 = (W - 2 * MARGIN - 4 * gap) // 5
+    chip_h2 = mm(22)
+    for i, (col, hexcode) in enumerate(secondaries):
+        x1 = W - MARGIN - i * (chip_w2 + gap)
+        x0 = x1 - chip_w2
+        d.rounded_rectangle([x0, y2, x1, y2 + chip_h2], radius=mm(2), fill=col)
+        tc = GREEN if col == PASTEL_BLUE else WHITE
+        draw_text(
+            d, ((x0 + x1) // 2, y2 + chip_h2 // 2), hexcode, font("bold", 14), tc, "mm", arabic=False
+        )
+
+    draw_footer_band(img)
     return img
 
 
 def export_pdf(pages: list[Image.Image], path: Path):
-    rgb_pages = [p.convert("RGB") for p in pages]
-    rgb_pages[0].save(
-        path,
-        "PDF",
-        resolution=DPI,
-        save_all=True,
-        append_images=rgb_pages[1:],
-    )
+    rgb = [p.convert("RGB") for p in pages]
+    rgb[0].save(path, "PDF", resolution=DPI, save_all=True, append_images=rgb[1:])
 
 
 def main():
     OUT_DIR.mkdir(exist_ok=True)
+    # remove old pages that no longer apply
+    for old in OUT_DIR.glob("*.png"):
+        old.unlink()
 
     pages = [
         ("01-غلاف", page_cover()),
-        ("02-الاسم", page_name()),
+        ("02-تطبيقات", page_apps()),
         ("03-نصائح", page_tips()),
-        ("04-هوية", page_palette_ref()),
-        ("05-محتوى", page_content()),
-        ("06-ملاحظات", page_notes()),
+        ("04-أين-وجهتك", page_map()),
+        ("05-قالوا", page_essay()),
+        ("06-ألوان", page_palette()),
     ]
-
     for name, img in pages:
         out = OUT_DIR / f"{name}.png"
         img.save(out, "PNG", dpi=(DPI, DPI))
