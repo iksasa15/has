@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>بوصلة UT — مذكرة مستجد (نظام تصميم ناعم)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#3B5249;
+    --base:#EDE7D4;
+    --base-soft:#F7F4EA;
+    --brand:#7473B3;
+    --brand-tint:#EDECF7;
+    --accent:#F8B624;
+    --accent-tint:#FDF1D8;
+    --coral-tint:#F6DDDA;
+    --coral-line:#D47F76;
+    --mint-tint:#E3EDD9;
+    --mint-line:#8FB07C;
+    --sky-tint:#E6EDF6;
+    --sky-line:#B5C9E4;
+    --pink:#FF5CB6;
+    --blue:#519CF2;
+    --deep:#651853;
+    --forest:#5BB34E;
+    --radius-sm:6mm;
+    --radius-md:9mm;
+    --radius-lg:14mm;
+    --shadow-soft:0 3mm 8mm rgba(59,82,73,0.10);
+    --font-display:'Almarai', 'IBM Plex Sans Arabic', sans-serif;
+    --font-body:'IBM Plex Sans Arabic', 'Almarai', sans-serif;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{background:#d9d5c4;}
+  body{
+    font-family:var(--font-body);
+    color:var(--ink);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:8mm;
+    padding:8mm 0 20mm;
+  }
+  .page{
+    width:148mm;
+    height:210mm;
+    background:var(--base-soft);
+    position:relative;
+    overflow:hidden;
+    box-shadow:0 4mm 10mm rgba(0,0,0,0.18);
+    padding:13mm 12mm;
+    display:flex;
+    flex-direction:column;
+  }
+  .divider-gold{
+    width:16mm; height:1mm; background:var(--accent); border-radius:1mm;
+  }
+  /* compass signature element */
+  .compass{
+    width:9mm; height:9mm; border-radius:50%;
+    border:0.5mm solid var(--brand);
+    position:relative; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .compass .needle{
+    position:absolute; width:0.6mm; height:3.4mm; background:var(--accent);
+    top:1mm; left:50%; transform-origin:50% 3.5mm; border-radius:1mm;
+  }
+  .compass .dot{
+    width:1mm; height:1mm; border-radius:50%; background:var(--brand);
+  }
+  .page-foot{
+    margin-top:auto;
+    display:flex; align-items:center; justify-content:space-between;
+    font-family:var(--font-body); font-weight:300; font-size:7.5pt; color:var(--brand);
+    padding-top:6mm;
+  }
+  .page-foot .num{font-weight:500; letter-spacing:0.3px;}
+
+  /* ---------- PAGE 1 : COVER ---------- */
+  .cover{ align-items:center; text-align:center; }
+  .cover-topbar{
+    width:100%; display:flex; justify-content:space-between; font-size:8pt; font-weight:500; color:var(--brand); letter-spacing:0.2px;
+  }
+  .cover-mid{
+    flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5mm; position:relative;
+  }
+  .cover-mid .bg-compass{
+    position:absolute; width:120mm; height:120mm; opacity:0.05; top:50%; left:50%; transform:translate(-50%,-50%);
+  }
+  .cover-title{ font-family:var(--font-display); font-weight:800; font-size:46pt; color:var(--ink); line-height:1; }
+  .cover-sub{ font-family:var(--font-display); font-weight:400; font-size:15pt; color:var(--brand); }
+  .cover-logo{
+    width:22mm; height:22mm; border-radius:50%; background:var(--brand-tint);
+    border:0.4mm solid var(--brand); display:flex; align-items:center; justify-content:center;
+    font-family:var(--font-display); font-weight:800; font-size:12pt; color:var(--brand);
+  }
+  .cover-foot{ font-size:7.5pt; color:var(--ink); opacity:0.6; }
+
+  /* ---------- PAGE 2 : APPS ---------- */
+  .apps-title{ font-family:var(--font-display); font-weight:700; font-size:16pt; margin-bottom:7mm; }
+  .apps-grid{ flex:1; display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; gap:5mm; }
+  .app-cell{ border-radius:var(--radius-md); padding:4mm; display:flex; align-items:stretch; }
+  .app-cell.top{ background:var(--coral-tint); }
+  .app-cell.bottom{ background:var(--mint-tint); }
+  .app-card{
+    background:#fff; border-radius:var(--radius-sm); padding:5mm 4mm; width:100%;
+    box-shadow:var(--shadow-soft); display:flex; flex-direction:column; gap:2.5mm;
+  }
+  .app-head{ display:flex; align-items:center; gap:2.5mm; }
+  .app-icon{
+    width:9mm; height:9mm; border-radius:50%; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-weight:700; font-size:9pt; color:#fff;
+  }
+  .app-name-en{ font-family:var(--font-display); font-weight:700; font-size:10pt; }
+  .app-name-ar{ font-size:8pt; color:var(--brand); font-weight:500; }
+  .app-desc{ font-size:7.6pt; line-height:1.55; color:var(--ink); opacity:0.85; }
+
+  /* ---------- PAGE 3 : TIPS ---------- */
+  .tips-head{ display:flex; gap:3mm; margin-bottom:7mm; }
+  .tips-head .rule{ width:0.7mm; background:var(--accent); border-radius:1mm; flex-shrink:0; }
+  .tips-head h2{ font-family:var(--font-display); font-weight:700; font-size:13pt; line-height:1.5; }
+  .tips-body{ flex:1; display:grid; grid-template-columns:1fr 1fr; gap:6mm; }
+  .tip{ display:flex; gap:3mm; margin-bottom:5mm; }
+  .tip .compass{ margin-top:1mm; }
+  .tip-text h3{ font-family:var(--font-display); font-weight:700; font-size:9.5pt; margin-bottom:1.5mm; }
+  .tip-text p{ font-size:7.6pt; line-height:1.55; opacity:0.85; }
+  .quote-box{
+    margin-top:auto; border:0.4mm dashed var(--brand); border-radius:var(--radius-sm);
+    padding:5mm; min-height:34mm; display:flex; flex-direction:column; justify-content:space-between;
+    background:var(--brand-tint);
+  }
+  .quote-mark{ font-family:var(--font-display); font-size:26pt; color:var(--brand); opacity:0.5; line-height:0.6; }
+  .quote-box .hint{ font-size:7pt; color:var(--brand); opacity:0.75; }
+
+  /* ---------- PAGE 4 : MAP ---------- */
+  .map-page{ background:var(--brand); color:#fff; border-radius:0; padding:0; }
+  .map-inner{
+    flex:1; margin:6mm; border-radius:var(--radius-lg); background:var(--brand);
+    border:0.5mm solid rgba(255,255,255,0.35);
+    position:relative; overflow:hidden; padding:10mm 9mm; display:flex; flex-direction:column;
+  }
+  .map-inner::before{
+    content:""; position:absolute; inset:-20mm; opacity:0.10;
+    background:radial-gradient(circle at 30% 70%, #fff 0, transparent 45%),
+               radial-gradient(circle at 75% 30%, #fff 0, transparent 40%);
+  }
+  .map-band{ background:var(--sky-tint); color:var(--ink); border-radius:var(--radius-sm); padding:3mm 4mm; font-size:8pt; font-weight:500; align-self:flex-start; }
+  .map-title{ font-family:var(--font-display); font-weight:800; font-size:24pt; margin:8mm 0 4mm; }
+  .map-text{ font-size:9pt; line-height:1.7; max-width:80mm; opacity:0.92; }
+  .map-cta{
+    margin-top:8mm; background:var(--accent); color:var(--ink); font-weight:700; font-family:var(--font-display);
+    border-radius:20mm; padding:4mm 6mm; font-size:9pt; display:inline-block; align-self:flex-start;
+  }
+  .map-qr-row{ margin-top:auto; display:flex; justify-content:flex-end; align-items:flex-end; gap:3mm; }
+  .qr-box{ width:22mm; height:22mm; background:#fff; border-radius:3mm; padding:2mm; }
+  .qr-box svg{ width:100%; height:100%; }
+  .qr-label{ font-size:6.8pt; opacity:0.8; max-width:22mm; text-align:center; }
+
+  /* ---------- PAGE 5 : QUOTES ---------- */
+  .say-page{ align-items:center; }
+  .say-card{
+    background:#fff; border-radius:var(--radius-md); box-shadow:var(--shadow-soft);
+    padding:9mm 8mm; flex:1; display:flex; flex-direction:column; justify-content:center; gap:4.5mm;
+  }
+  .say-card p{ font-size:8.6pt; line-height:1.8; opacity:0.9; }
+  .say-card .closing{ font-family:var(--font-display); font-weight:700; font-size:11pt; color:var(--brand); margin-top:2mm; line-height:1.6; }
+  .say-logo{ margin-top:6mm; align-self:center; }
+
+  /* ---------- PAGE 6 : COLORS ---------- */
+  .colors-title{ font-family:var(--font-display); font-weight:700; font-size:15pt; margin-bottom:6mm; }
+  .swatch-group{ margin-bottom:5mm; }
+  .swatch-group h4{ font-size:7.6pt; color:var(--brand); font-weight:500; margin-bottom:2mm; }
+  .swatch-row{ display:flex; gap:2.5mm; }
+  .swatch{
+    flex:1; border-radius:var(--radius-sm); height:16mm; display:flex; flex-direction:column; justify-content:flex-end;
+    padding:2mm; font-size:6.3pt; color:#fff; font-weight:500;
+  }
+  .swatch.dark-text{ color:var(--ink); }
+  .colors-foot{
+    margin-top:auto; background:var(--brand); color:#fff; border-radius:var(--radius-md);
+    padding:5mm; display:flex; flex-direction:column; align-items:center; gap:1.5mm; text-align:center;
+  }
+  .colors-foot .u-logo{
+    width:14mm; height:14mm; border-radius:50%; border:0.4mm solid #fff; display:flex; align-items:center; justify-content:center;
+    font-family:var(--font-display); font-weight:700; font-size:8pt; margin-bottom:2mm;
+  }
+  .colors-foot .ar{ font-size:8.5pt; font-weight:600; }
+  .colors-foot .en{ font-size:7pt; opacity:0.85; }
+  .colors-foot .ed{ font-size:7pt; opacity:0.7; margin-top:1mm; }
+
+  @media print{
+    body{ background:#fff; padding:0; gap:0; }
+    .page{ box-shadow:none; page-break-after:always; }
+    @page{ size:148mm 210mm; margin:0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- shared compass SVG template used via inline markup per instance -->
+
+<!-- ===================== PAGE 1 — COVER ===================== -->
+<section class="page cover">
+  <div class="cover-topbar">
+    <span>Aug. 23, 2026</span>
+    <span>الطبعة الأولى</span>
+  </div>
+  <div class="cover-mid">
+    <svg class="bg-compass" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="46" fill="none" stroke="#7473B3" stroke-width="0.6"/>
+      <circle cx="50" cy="50" r="30" fill="none" stroke="#7473B3" stroke-width="0.4"/>
+      <line x1="50" y1="4" x2="50" y2="96" stroke="#7473B3" stroke-width="0.4"/>
+      <line x1="4" y1="50" x2="96" y2="50" stroke="#7473B3" stroke-width="0.4"/>
+      <polygon points="50,20 55,50 50,80 45,50" fill="#F8B624" opacity="0.8"/>
+    </svg>
+    <div class="cover-title">بوصلة UT</div>
+    <div class="cover-sub">مذكرة مستجد</div>
+    <div class="divider-gold"></div>
+  </div>
+  <div style="display:flex; flex-direction:column; align-items:center; gap:3mm;">
+    <div class="cover-logo">UT</div>
+    <div class="cover-foot">جامعة تبوك · عمادة شؤون الطلاب</div>
+  </div>
+</section>
+
+<!-- ===================== PAGE 2 — APPS ===================== -->
+<section class="page">
+  <div class="apps-title">تطبيقات ستسهل عليك رحلتك الجامعية..</div>
+  <div class="apps-grid">
+    <div class="app-cell top">
+      <div class="app-card">
+        <div class="app-head">
+          <div class="app-icon" style="background:var(--coral-line);">B</div>
+          <div><div class="app-name-en">Blackboard</div><div class="app-name-ar">بلاك بورد</div></div>
+        </div>
+        <div class="divider-gold"></div>
+        <div class="app-desc">المنصة الأكاديمية الرسمية للجامعة؛ تمكنك من متابعة المحاضرات، تسليم الواجبات، واطلاعك على الإعلانات والدرجات أولاً بأول.</div>
+      </div>
+    </div>
+    <div class="app-cell top">
+      <div class="app-card">
+        <div class="app-head">
+          <div class="app-icon" style="background:var(--coral-line);">خ</div>
+          <div><div class="app-name-en">Khata</div><div class="app-name-ar">خطة</div></div>
+        </div>
+        <div class="divider-gold"></div>
+        <div class="app-desc">حاسبتك ومنظمك الأكاديمي؛ يساعدك على حساب ومتابعة معدلك التراكمي (GPA)، تنظيم الجدول الدراسي، وتتبع الدرجات بسهولة.</div>
+      </div>
+    </div>
+    <div class="app-cell bottom">
+      <div class="app-card">
+        <div class="app-head">
+          <div class="app-icon" style="background:var(--mint-line);">N</div>
+          <div><div class="app-name-en">Notion</div><div class="app-name-ar">نوشن</div></div>
+        </div>
+        <div class="divider-gold"></div>
+        <div class="app-desc">المساحة الشاملة لتنظيم حياتك الدراسية؛ تُستخدم لتدوين الملاحظات، ترتيب المهام، وإدارة المشاريع بأسلوب عصري.</div>
+      </div>
+    </div>
+    <div class="app-cell bottom">
+      <div class="app-card">
+        <div class="app-head">
+          <div class="app-icon" style="background:var(--mint-line);">F</div>
+          <div><div class="app-name-en">Forest</div><div class="app-name-ar">فوريست</div></div>
+        </div>
+        <div class="divider-gold"></div>
+        <div class="app-desc">تطبيق مبتكر للتركيز والتخلص من تشتت الهاتف؛ ينمي لك شجرة افتراضية كلما ابتعدت عن جوالك وركزت في مذاكرتك.</div>
+      </div>
+    </div>
+  </div>
+  <div class="page-foot"><span class="num">2 / 6</span><span>بوصلة UT</span></div>
+</section>
+
+<!-- ===================== PAGE 3 — TIPS ===================== -->
+<section class="page">
+  <div class="tips-head">
+    <div class="rule"></div>
+    <h2>البدايات لا تُكتب بالحظ...<br>بل بالعادات الصغيرة التي نختارها كل يوم</h2>
+  </div>
+  <div class="tips-body">
+    <div class="col">
+      <div class="tip">
+        <div class="compass"><div class="needle" style="transform:rotate(0deg);"></div></div>
+        <div class="tip-text"><h3>لا تؤجل البداية</h3><p>قد يبدو الأسبوع الأول خفيفًا لكنه يرسم الفصل كاملاً. وكل مهمة تنجزها اليوم، هي عبء أقل تحمله غدًا.</p></div>
+      </div>
+      <div class="tip">
+        <div class="compass"><div class="needle" style="transform:rotate(72deg);"></div></div>
+        <div class="tip-text"><h3>اسأل بثقة</h3><p>ليس السؤال دليلًا على الجهل، بل رغبة في الفهم. وكل إجابة تحصل عليها اليوم، تختصر عليك كثيرًا من التردد.</p></div>
+      </div>
+      <div class="tip">
+        <div class="compass"><div class="needle" style="transform:rotate(144deg);"></div></div>
+        <div class="tip-text"><h3>اجعل للمراجعة موعدًا</h3><p>لا تجعل كتبك لا تعرفك إلا ليلة الاختبار. دقائق قليلة بعد كل محاضرة قد تغنيك عن ساعات طويلة من القلق.</p></div>
+      </div>
+    </div>
+    <div class="col" style="display:flex; flex-direction:column;">
+      <div class="tip">
+        <div class="compass"><div class="needle" style="transform:rotate(216deg);"></div></div>
+        <div class="tip-text"><h3>عش التجربة كاملة</h3><p>درجاتك جزء من رحلتك لكنها ليست الرحلة كلها. شارك، تعلّم، واصنع لنفسك ذكريات تستحق أن تُروى بعد التخرج.</p></div>
+      </div>
+      <div class="tip">
+        <div class="compass"><div class="needle" style="transform:rotate(288deg);"></div></div>
+        <div class="tip-text"><h3>نظّم وقتك قبل أن ينظّمك الوقت</h3><p>المهام الجامعية لا تتراكم فجأة بل تتسلل بهدوء. وما تكتبه في جدولك اليوم، لن يطاردك غدًا.</p></div>
+      </div>
+      <div class="quote-box">
+        <div class="quote-mark">”</div>
+        <div class="hint">مساحتك — اكتب هنا اقتباسك الخاص أو ملاحظة تخصّك</div>
+      </div>
+    </div>
+  </div>
+  <div class="page-foot"><span class="num">3 / 6</span><span>بوصلة UT</span></div>
+</section>
+
+<!-- ===================== PAGE 4 — MAP ===================== -->
+<section class="page map-page">
+  <div class="map-inner">
+    <div class="map-band">دليل الوجهة</div>
+    <div class="map-title">أين وجهتك؟</div>
+    <div class="map-text">سواء كنت متجهًا إلى عمادة شؤون الطلاب، أو تبحث عن المكتبة المركزية أو كليتك، ستساعدك الخريطة التفاعلية على الوصول بسهولة.</div>
+    <div class="map-cta">امسح الرمز وابدأ رحلتك داخل المدينة الجامعية !</div>
+    <div class="map-qr-row">
+      <div class="qr-label">امسح للخريطة التفاعلية</div>
+      <div class="qr-box">
+        <svg viewBox="0 0 29 29" shape-rendering="crispEdges">
+          <rect width="29" height="29" fill="#fff"/>
+          <g fill="#3B5249">
+            <rect x="0" y="0" width="7" height="7"/><rect x="1" y="1" width="5" height="5" fill="#fff"/><rect x="2" y="2" width="3" height="3"/>
+            <rect x="22" y="0" width="7" height="7"/><rect x="23" y="1" width="5" height="5" fill="#fff"/><rect x="24" y="2" width="3" height="3"/>
+            <rect x="0" y="22" width="7" height="7"/><rect x="1" y="23" width="5" height="5" fill="#fff"/><rect x="2" y="24" width="3" height="3"/>
+            <rect x="9" y="1" width="1" height="1"/><rect x="11" y="1" width="2" height="1"/><rect x="15" y="2" width="1" height="2"/><rect x="18" y="1" width="1" height="1"/>
+            <rect x="9" y="9" width="4" height="4"/><rect x="16" y="9" width="1" height="1"/><rect x="18" y="10" width="2" height="1"/>
+            <rect x="9" y="15" width="1" height="4"/><rect x="12" y="16" width="2" height="2"/><rect x="16" y="15" width="4" height="1"/>
+            <rect x="9" y="20" width="2" height="2"/><rect x="13" y="20" width="1" height="3"/><rect x="16" y="21" width="3" height="2"/>
+            <rect x="20" y="9" width="1" height="6"/><rect x="22" y="11" width="4" height="1"/><rect x="22" y="14" width="2" height="2"/>
+            <rect x="20" y="17" width="1" height="1"/><rect x="22" y="18" width="1" height="4"/><rect x="24" y="17" width="3" height="1"/>
+            <rect x="20" y="22" width="2" height="2"/><rect x="24" y="22" width="1" height="1"/><rect x="26" y="24" width="2" height="2"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== PAGE 5 — SAY ===================== -->
+<section class="page say-page">
+  <div class="say-card">
+    <p>قالوا إن الجامعة مرحلة صعبة، مليئة بالعقبات، ولم يقولوا إنها رحلة يتعاقب فيها العسر واليسر، وتُصنع فيها الحكايات بينهما.</p>
+    <p>وقالوا: لا تصدّق أحدًا، فالكل سيستغلك؛ ولم يقولوا إنك ستجد فيها أناسًا يحبون العطاء، ويبذلون من وقتهم وجهدهم ما يجعل أيامك أيسر وأجمل.</p>
+    <p>وقالوا إن الجامعة ليست إلا آيبادًا وقهوةً وروتينًا مملًا، ولم يذكروا أنها مساحة واسعة لاكتشاف ذاتك، وصقل مهاراتك، وبناء شخصيتك بعيدًا عن مقاعد الدراسة.</p>
+    <p>قالوا الكثير، فلا تجعل ما قيل لك يرسم تجربتك قبل أن تعيشها. لا تكن معلّقًا في مهبّ الأقوال، بل خض تجربتك بنفسك، واصنع قصتك بطريقتك، وكن أنت من يمسك بدفّة سفينته، ويوجهها نحو المرفأ الذي ينشده.</p>
+    <div class="closing">فالجامعة لا تُروى كما قيلت لك... بل كما عشتها أنت</div>
+    <div class="say-logo cover-logo" style="width:14mm; height:14mm; font-size:8pt;">UT</div>
+  </div>
+  <div class="page-foot"><span class="num">5 / 6</span><span>بوصلة UT</span></div>
+</section>
+
+<!-- ===================== PAGE 6 — COLORS ===================== -->
+<section class="page">
+  <div class="colors-title">دليل الألوان</div>
+
+  <div class="swatch-group">
+    <h4>الألوان الأساسية</h4>
+    <div class="swatch-row">
+      <div class="swatch" style="background:#3B5249;">أخضر داكن<br>#3B5249</div>
+      <div class="swatch dark-text" style="background:#EDE7D4;">كريمي<br>#EDE7D4</div>
+      <div class="swatch" style="background:#7473B3;">بنفسجي<br>#7473B3</div>
+      <div class="swatch dark-text" style="background:#F8B624;">ذهبي<br>#F8B624</div>
+    </div>
+  </div>
+
+  <div class="swatch-group">
+    <h4>تدرّجات ناعمة (جديد)</h4>
+    <div class="swatch-row">
+      <div class="swatch dark-text" style="background:var(--brand-tint);">بنفسجي هامس</div>
+      <div class="swatch dark-text" style="background:var(--accent-tint);">ذهبي هامس</div>
+      <div class="swatch dark-text" style="background:var(--coral-tint);">مرجاني هامس</div>
+      <div class="swatch dark-text" style="background:var(--mint-tint);">أخضر هامس</div>
+    </div>
+  </div>
+
+  <div class="swatch-group">
+    <h4>الألوان الفرعية</h4>
+    <div class="swatch-row">
+      <div class="swatch dark-text" style="background:#B5C9E4;">#B5C9E4</div>
+      <div class="swatch" style="background:#FF5CB6;">#FF5CB6</div>
+      <div class="swatch" style="background:#519CF2;">#519CF2</div>
+      <div class="swatch" style="background:#651853;">#651853</div>
+      <div class="swatch" style="background:#5BB34E;">#5BB34E</div>
+    </div>
+  </div>
+
+  <div class="colors-foot">
+    <div class="u-logo">UT</div>
+    <div class="ar">عمادة شؤون الطلاب</div>
+    <div class="en">Deanship of Students' Affairs</div>
+    <div class="ed">كتيب أرشدني · نسخة 48</div>
+  </div>
+</section>
+
+</body>
+</html>
