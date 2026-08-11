@@ -119,7 +119,10 @@
   .app-icon img{ width:100%; height:100%; object-fit:cover; display:block; }
   .app-name-en{ font-family:var(--font-display); font-weight:700; font-size:10pt; }
   .app-name-ar{ font-size:8pt; color:var(--brand); font-weight:500; }
-  .app-desc{ font-size:7.6pt; line-height:1.55; color:var(--ink); opacity:0.85; }
+  .app-desc{
+    font-size:7.6pt; line-height:1.55; color:var(--ink); opacity:0.85;
+    text-align:justify; text-align-last:right; text-justify:inter-word;
+  }
 
   .tips-head{ display:flex; gap:3mm; margin-bottom:7mm; }
   .tips-head .rule{ width:0.7mm; background:var(--accent); border-radius:1mm; flex-shrink:0; }
@@ -127,8 +130,15 @@
   .tips-body{ flex:1; display:grid; grid-template-columns:1fr 1fr; gap:6mm; }
   .tip{ display:flex; gap:3mm; margin-bottom:5mm; }
   .tip .compass{ margin-top:1mm; }
-  .tip-text h3{ font-family:var(--font-display); font-weight:700; font-size:9.5pt; margin-bottom:1.5mm; }
-  .tip-text p{ font-size:7.6pt; line-height:1.55; opacity:0.85; }
+  .tip-text{ flex:1; min-width:0; }
+  .tip-text h3{
+    font-family:var(--font-display); font-weight:700; font-size:9.5pt; margin-bottom:1.5mm;
+    text-align:justify; text-align-last:right;
+  }
+  .tip-text p{
+    font-size:7.6pt; line-height:1.55; opacity:0.85;
+    text-align:justify; text-align-last:right; text-justify:inter-word;
+  }
   .quote-box{
     margin-top:auto; border:0.4mm dashed var(--brand); border-radius:var(--radius-sm);
     padding:5mm; min-height:34mm; display:flex; flex-direction:column; justify-content:space-between;
@@ -150,7 +160,10 @@
   }
   .map-band{ background:var(--sky-tint); color:var(--ink); border-radius:var(--radius-sm); padding:3mm 4mm; font-size:8pt; font-weight:500; align-self:flex-start; position:relative; z-index:1; }
   .map-title{ font-family:var(--font-display); font-weight:800; font-size:24pt; margin:8mm 0 4mm; position:relative; z-index:1; }
-  .map-text{ font-size:9pt; line-height:1.7; max-width:80mm; opacity:0.92; position:relative; z-index:1; }
+  .map-text{
+    font-size:9pt; line-height:1.7; max-width:80mm; opacity:0.92; position:relative; z-index:1;
+    text-align:justify; text-align-last:right; text-justify:inter-word;
+  }
   .map-cta{
     margin-top:8mm; background:var(--accent); color:var(--ink); font-weight:700; font-family:var(--font-display);
     border-radius:20mm; padding:4mm 6mm; font-size:9pt; display:inline-block; align-self:flex-start; position:relative; z-index:1;
@@ -168,8 +181,14 @@
     background:#fff; border-radius:var(--radius-md); box-shadow:var(--shadow-soft);
     padding:9mm 8mm; flex:1; display:flex; flex-direction:column; justify-content:center; gap:4.5mm; width:100%;
   }
-  .say-card p{ font-size:8.6pt; line-height:1.8; opacity:0.9; }
-  .say-card .closing{ font-family:var(--font-display); font-weight:700; font-size:11pt; color:var(--brand); margin-top:2mm; line-height:1.6; }
+  .say-card p{
+    font-size:8.6pt; line-height:1.8; opacity:0.9;
+    text-align:justify; text-align-last:right; text-justify:inter-word;
+  }
+  .say-card .closing{
+    font-family:var(--font-display); font-weight:700; font-size:11pt; color:var(--brand);
+    margin-top:2mm; line-height:1.6; text-align:right;
+  }
 
   .colors-title{ font-family:var(--font-display); font-weight:700; font-size:15pt; margin-bottom:6mm; }
   .swatch-group{ margin-bottom:5mm; }
@@ -279,25 +298,25 @@
     <div class="col">
       <div class="tip">
         <div class="compass"><div class="needle" style="transform:rotate(0deg);"></div><div class="dot"></div></div>
-        <div class="tip-text"><h3>لا تؤجل البداية</h3><p>قد يبدو الأسبوع الأول خفيفًا لكنه يرسم الفصل كاملاً. وكل مهمة تنجزها اليوم، هي عبء أقل تحمله غدًا.</p></div>
+        <div class="tip-text"><h3>لا تؤجّل البدايـــة</h3><p>قد يبدو الأسبوع الأول خفيفًا لكنه يرسم الفصل كاملاً. وكل مهمة تنجزها اليوم، هي عبء أقل تحمله غدًا.</p></div>
       </div>
       <div class="tip">
         <div class="compass"><div class="needle" style="transform:rotate(72deg);"></div><div class="dot"></div></div>
-        <div class="tip-text"><h3>اسأل بثقة</h3><p>ليس السؤال دليلًا على الجهل، بل رغبة في الفهم. وكل إجابة تحصل عليها اليوم، تختصر عليك كثيرًا من التردد.</p></div>
+        <div class="tip-text"><h3>اســأل بثقـــة</h3><p>ليس السؤال دليلًا على الجهل، بل رغبة في الفهم. وكل إجابة تحصل عليها اليوم، تختصر عليك كثيرًا من التردد.</p></div>
       </div>
       <div class="tip">
         <div class="compass"><div class="needle" style="transform:rotate(144deg);"></div><div class="dot"></div></div>
-        <div class="tip-text"><h3>اجعل للمراجعة موعدًا</h3><p>لا تجعل كتبك لا تعرفك إلا ليلة الاختبار. دقائق قليلة بعد كل محاضرة قد تغنيك عن ساعات طويلة من القلق.</p></div>
+        <div class="tip-text"><h3>اجعل للمراجعة موعـدًا</h3><p>لا تجعل كتبك لا تعرفك إلا ليلة الاختبار. دقائق قليلة بعد كل محاضرة قد تغنيك عن ساعات طويلة من القلق.</p></div>
       </div>
     </div>
     <div class="col" style="display:flex; flex-direction:column;">
       <div class="tip">
         <div class="compass"><div class="needle" style="transform:rotate(216deg);"></div><div class="dot"></div></div>
-        <div class="tip-text"><h3>عش التجربة كاملة</h3><p>درجاتك جزء من رحلتك لكنها ليست الرحلة كلها. شارك، تعلّم، واصنع لنفسك ذكريات تستحق أن تُروى بعد التخرج.</p></div>
+        <div class="tip-text"><h3>عش التجربة كامـلـة</h3><p>درجاتك جزء من رحلتك لكنها ليست الرحلة كلها. شارك، تعلّم، واصنع لنفسك ذكريات تستحق أن تُروى بعد التخرج.</p></div>
       </div>
       <div class="tip">
         <div class="compass"><div class="needle" style="transform:rotate(288deg);"></div><div class="dot"></div></div>
-        <div class="tip-text"><h3>نظّم وقتك قبل أن ينظّمك الوقت</h3><p>المهام الجامعية لا تتراكم فجأة بل تتسلل بهدوء. وما تكتبه في جدولك اليوم، لن يطاردك غدًا.</p></div>
+        <div class="tip-text"><h3>نظّم وقتك قبل أن ينظّمك الـوقـت</h3><p>المهام الجامعية لا تتراكم فجأة بل تتسلل بهدوء. وما تكتبه في جدولك اليوم، لن يطاردك غدًا.</p></div>
       </div>
       <div class="quote-box">
         <div class="quote-mark">”</div>
@@ -382,6 +401,84 @@
     <div class="ed">كتيب أرشدني · نسخة 48</div>
   </div>
 </section>
+
+<script>
+/* كشيدة ديناميكية للفقرات متعددة الأسطر — توازن الحواف بدون تمديد مفرط */
+(function () {
+  const TATWEEL = '\u0640';
+  const CONNECT = /[\u0627-\u064A\u067E\u0686\u06AF\u06A9]/;
+
+  function canStretch(ch, next) {
+    if (!ch || !next) return false;
+    if (ch === ' ' || next === ' ' || ch === TATWEEL || next === TATWEEL) return false;
+    if ('،.؛:!؟()[]{}«»"\''.includes(ch) || '،.؛:!؟()[]{}«»"\''.includes(next)) return false;
+    return CONNECT.test(ch) && CONNECT.test(next);
+  }
+
+  function insertKashida(text, count) {
+    const slots = [];
+    for (let i = 0; i < text.length - 1; i++) {
+      if (canStretch(text[i], text[i + 1])) slots.push(i + 1);
+    }
+    if (!slots.length || count <= 0) return text;
+    const picks = [];
+    for (let c = 0; c < count; c++) picks.push(slots[c % slots.length]);
+    picks.sort((a, b) => b - a);
+    let out = text;
+    for (const i of picks) out = out.slice(0, i) + TATWEEL + out.slice(i);
+    return out;
+  }
+
+  function justifyEl(el) {
+    if (!el || el.dataset.kashida === '1') return;
+    const raw = el.textContent.trim();
+    if (raw.length < 24) return;
+    el.dataset.kashida = '1';
+    el.style.textAlign = 'justify';
+    el.style.textAlignLast = 'right';
+    el.textContent = raw;
+
+    const width = el.clientWidth;
+    if (width < 40) return;
+
+    // قس أسطرًا عبر تقسيم تقريبي ثم أضف كشيدة خفيفة لكل سطر ناقص
+    const words = raw.split(/\s+/);
+    const probe = document.createElement('span');
+    probe.style.cssText = 'position:absolute;visibility:hidden;white-space:nowrap;font:' + getComputedStyle(el).font;
+    document.body.appendChild(probe);
+
+    const lines = [];
+    let cur = '';
+    for (const w of words) {
+      const trial = cur ? cur + ' ' + w : w;
+      probe.textContent = trial;
+      if (probe.offsetWidth > width && cur) {
+        lines.push(cur);
+        cur = w;
+      } else {
+        cur = trial;
+      }
+    }
+    if (cur) lines.push(cur);
+
+    const justified = lines.map((line, idx) => {
+      if (idx === lines.length - 1) return line; // آخر سطر بدون كشيدة زائدة
+      probe.textContent = line;
+      const gap = width - probe.offsetWidth;
+      if (gap < 4) return line;
+      // تقريب: كل كشيدة ≈ 0.35em من عرض الخط
+      const fs = parseFloat(getComputedStyle(el).fontSize) || 12;
+      const n = Math.min(8, Math.max(1, Math.round(gap / (fs * 0.28))));
+      return insertKashida(line, n);
+    });
+
+    document.body.removeChild(probe);
+    el.textContent = justified.join(' ');
+  }
+
+  document.querySelectorAll('.tip-text p, .app-desc, .say-card p, .map-text').forEach(justifyEl);
+})();
+</script>
 
 </body>
 </html>
