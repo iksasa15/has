@@ -275,27 +275,28 @@ def page_apps() -> Image.Image:
         ),
     ]
 
-    pad = mm(5)
-    icon_s = mm(14)
+    pad = mm(6)
+    icon_s = mm(13)
     for box, icon, en, ar_name, body in apps:
         x0, y0, x1, y1 = box
-        # icon on the right
+        # icon top-right of cell
         ix1 = x1 - pad
-        iy0 = y0 + pad
+        iy0 = y0 + pad + mm(2)
         paste_fit(img, icon, (ix1 - icon_s, iy0, ix1, iy0 + icon_s))
 
+        # title left of icon, same baseline
         title = f"{en} ({ar_name}):"
-        title_x = ix1 - icon_s - mm(2)
-        draw_text(d, (title_x, iy0 + icon_s // 2), title, font("bold", 22), BROWN, "rm")
+        title_x = ix1 - icon_s - mm(3)
+        draw_text(d, (title_x, iy0 + icon_s // 2), title, font("bold", 23), BROWN, "rm")
 
-        body_top = iy0 + icon_s + mm(3)
+        body_top = iy0 + icon_s + mm(4)
         draw_multiline_rtl(
             d,
             (x0 + pad, body_top, x1 - pad, y1 - pad),
             body,
-            font("regular", 18),
+            font("regular", 19),
             DARK,
-            line_spacing=1.35,
+            line_spacing=1.38,
             align="right",
         )
 
@@ -409,57 +410,56 @@ def page_map() -> Image.Image:
     d = ImageDraw.Draw(img)
 
     # Purple panel with concave corners (notches)
-    panel = [MARGIN, MARGIN, W - mm(18), H - MARGIN]
+    panel = [MARGIN, MARGIN, W - mm(16), H - MARGIN]
     px0, py0, px1, py1 = panel
-    d.rounded_rectangle(panel, radius=mm(4), fill=PURPLE)
+    d.rounded_rectangle(panel, radius=mm(3), fill=PURPLE)
 
-    # Concave notches at corners via blue circles
     notch_r = mm(7)
-    for cx, cy in (
-        (px0, py0),
-        (px1, py0),
-        (px0, py1),
-        (px1, py1),
-    ):
+    for cx, cy in ((px0, py0), (px1, py0), (px0, py1), (px1, py1)):
         d.ellipse([cx - notch_r, cy - notch_r, cx + notch_r, cy + notch_r], fill=PASTEL_BLUE)
 
-    # Text inside panel (right aligned)
-    tx1 = px1 - mm(10)
-    tx0 = px0 + mm(10)
-    ty = py0 + mm(18)
-    draw_text(d, (tx1, ty), "أين وجهتك؟", font("black", 52), WHITE, "rt")
+    tx1 = px1 - mm(12)
+    tx0 = px0 + mm(12)
+    ty = py0 + mm(22)
+
+    draw_text(d, (tx1, ty), "أين وجهتك؟", font("black", 56), WHITE, "rt")
 
     body = (
         "سواء كنت متجهًا إلى عمادة شؤون الطلاب، أو تبحث عن المكتبة المركزية أو كليتك، "
         "ستساعدك الخريطة التفاعلية على الوصول بسهولة."
     )
-    draw_multiline_rtl(
+    y_after = draw_multiline_rtl(
         d,
-        (tx0, ty + mm(16), tx1, ty + mm(55)),
+        (tx0, ty + mm(18), tx1, ty + mm(58)),
         body,
-        font("regular", 26),
+        font("regular", 28),
         WHITE,
-        line_spacing=1.45,
+        line_spacing=1.5,
         align="right",
     )
 
+    # CTA above QR area
+    cta_y = max(y_after + mm(10), H // 2 + mm(8))
     draw_text(
         d,
-        (tx1, ty + mm(62)),
+        (tx1, cta_y),
         "امسح الرمز وابدأ رحلتك داخل المدينة الجامعية !",
-        font("bold", 24),
+        font("bold", 26),
         CORAL,
         "rt",
     )
 
-    # QR bottom-right of panel, overlapping blue strip
-    qr_s = mm(38)
-    qx1 = W - mm(8)
-    qy1 = H - mm(14)
+    # QR bottom-right, overlapping blue strip
+    qr_s = mm(42)
+    qx1 = W - mm(6)
+    qy1 = H - mm(12)
     qx0 = qx1 - qr_s
     qy0 = qy1 - qr_s
-    # white pad
-    d.rounded_rectangle([qx0 - mm(2), qy0 - mm(2), qx1 + mm(2), qy1 + mm(2)], radius=mm(2), fill=WHITE)
+    d.rounded_rectangle(
+        [qx0 - mm(3), qy0 - mm(3), qx1 + mm(3), qy1 + mm(3)],
+        radius=mm(2),
+        fill=WHITE,
+    )
     paste_fit(img, ASSETS / "qr-map.png", (qx0, qy0, qx1, qy1))
     return img
 
