@@ -80,15 +80,15 @@
   .logo-img{ display:block; object-fit:contain; }
 
   .flora-band{
-    position:absolute; inset:auto 0 0 0; height:62mm;
+    position:absolute; inset:auto 0 0 0; height:78mm;
     pointer-events:none; z-index:0;
   }
   .flora-band img, .flora-band svg, .flora-band object{
     position:absolute; bottom:0; display:block;
   }
-  .flora-band .flora-l{ left:0; height:54mm; width:auto; }
-  .flora-band .flora-r{ right:-3mm; height:64mm; width:auto; }
-  .flora-band.soft{ opacity:0.5; }
+  .flora-band .flora-l{ left:-12mm; bottom:-16mm; height:82mm; width:auto; }
+  .flora-band .flora-r{ right:-16mm; bottom:-20mm; height:92mm; width:auto; transform:scaleX(-1); }
+  .flora-band.soft{ opacity:0.38; }
   .page > *:not(.flora-band){ position:relative; z-index:1; }
 
   /* ——— 01 غلاف ——— */
@@ -164,9 +164,9 @@
     width:100%; max-width:118mm; align-content:start;
   }
   .priv-points p{ font-size:7.7pt; line-height:1.55; margin-bottom:4.5mm; }
-  .priv-page .flora-band{ height:72mm; }
-  .priv-page .flora-band .flora-l{ height:64mm; }
-  .priv-page .flora-band .flora-r{ height:72mm; }
+  .priv-page .flora-band{ height:88mm; }
+  .priv-page .flora-band .flora-l{ left:-10mm; bottom:-18mm; height:92mm; }
+  .priv-page .flora-band .flora-r{ right:-14mm; bottom:-22mm; height:102mm; }
 
   /* ——— 06 رحلة ——— */
   .journey-page{ background:var(--lavender); color:#fff; padding:0; }
@@ -204,9 +204,9 @@
   }
   .tip-text h3{ font-weight:700; font-size:9.5pt; margin-bottom:1.4mm; color:var(--olive); }
   .tip-text p{ font-size:7.5pt; line-height:1.55; color:var(--ink); }
-  .xw-page .flora-band{ height:42mm; opacity:0.35; }
-  .xw-page .flora-band .flora-l{ height:38mm; }
-  .xw-page .flora-band .flora-r{ height:42mm; }
+  .xw-page .flora-band{ height:48mm; opacity:0.28; }
+  .xw-page .flora-band .flora-l{ height:52mm; }
+  .xw-page .flora-band .flora-r{ height:58mm; }
 
   /* ——— 08 قالوا ——— */
   .say-page{ --section:var(--lavender); }
@@ -319,8 +319,8 @@
 <!-- 1 غلاف -->
 <section class="page cover">
   <div class="flora-band soft" aria-hidden="true">
-    <img class="flora-l" src="_assets/flora-left.svg" alt="">
-    <img class="flora-r" src="_assets/flora-right.svg" alt="">
+    <img class="flora-l" src="_assets/lavender.svg" alt="">
+    <img class="flora-r" src="_assets/lavender.svg" alt="">
   </div>
   <div class="cover-mid">
     <div class="cover-title">بوصلة UT</div>
@@ -332,8 +332,8 @@
 <!-- 2 النشاط -->
 <section class="page" style="--section:#7473B3">
   <div class="flora-band soft" aria-hidden="true">
-    <img class="flora-l" src="_assets/flora-left.svg" alt="">
-    <img class="flora-r" src="_assets/flora-right.svg" alt="">
+    <img class="flora-l" src="_assets/lavender.svg" alt="">
+    <img class="flora-r" src="_assets/lavender.svg" alt="">
   </div>
   <div class="kicker"><span class="rule"></span>كلمة</div>
   <h1 class="sec-h1">النشاط الطلابي</h1>
@@ -363,8 +363,8 @@
 <!-- 3 تطبيقات -->
 <section class="page apps-page">
   <div class="flora-band soft" aria-hidden="true">
-    <img class="flora-l" src="_assets/flora-left.svg" alt="">
-    <img class="flora-r" src="_assets/flora-right.svg" alt="">
+    <img class="flora-l" src="_assets/lavender.svg" alt="">
+    <img class="flora-r" src="_assets/lavender.svg" alt="">
   </div>
   <div class="kicker"><span class="rule"></span>توصيات</div>
   <div class="apps-title">تطبيقات ستسهّل عليك رحلتك الجامعية</div>
@@ -396,8 +396,8 @@
 <!-- 4 أين وجهتك -->
 <section class="page map-page">
   <div class="flora-band soft" aria-hidden="true">
-    <img class="flora-l" src="_assets/flora-left.svg" alt="">
-    <img class="flora-r" src="_assets/flora-right.svg" alt="">
+    <img class="flora-l" src="_assets/lavender.svg" alt="">
+    <img class="flora-r" src="_assets/lavender.svg" alt="">
   </div>
   <div class="kicker"><span class="rule"></span>دليل الوجهة</div>
   <h1 class="map-title">أين وجهتك؟</h1>
@@ -416,8 +416,8 @@
 <!-- 5 امتيازات -->
 <section class="page priv-page">
   <div class="flora-band" aria-hidden="true">
-    <img class="flora-l" src="_assets/flora-left.svg" alt="">
-    <img class="flora-r" src="_assets/flora-right.svg" alt="">
+    <img class="flora-l" src="_assets/lavender-on-purple.svg" alt="">
+    <img class="flora-r" src="_assets/lavender-on-purple.svg" alt="">
   </div>
   <div class="priv-top">
     <div>
@@ -446,8 +446,8 @@
 <!-- 6 رحلة -->
 <section class="page journey-page">
   <div class="flora-band" aria-hidden="true">
-    <img class="flora-l" src="_assets/flora-left.svg" alt="">
-    <img class="flora-r" src="_assets/flora-right.svg" alt="">
+    <img class="flora-l" src="_assets/lavender-on-purple.svg" alt="">
+    <img class="flora-r" src="_assets/lavender-on-purple.svg" alt="">
   </div>
   <div class="journey-inner">
     <h1 class="journey-title">رحلة بوصلة UT</h1>
@@ -486,8 +486,8 @@
 <!-- 7 نصائح -->
 <section class="page tips-page">
   <div class="flora-band soft" aria-hidden="true">
-    <img class="flora-l" src="_assets/flora-left.svg" alt="">
-    <img class="flora-r" src="_assets/flora-right.svg" alt="">
+    <img class="flora-l" src="_assets/lavender.svg" alt="">
+    <img class="flora-r" src="_assets/lavender.svg" alt="">
   </div>
   <div class="tips-head">
     <div class="rule"></div>
@@ -529,8 +529,8 @@
 <!-- 8 قالوا -->
 <section class="page say-page">
   <div class="flora-band soft" aria-hidden="true">
-    <img class="flora-l" src="_assets/flora-left.svg" alt="">
-    <img class="flora-r" src="_assets/flora-right.svg" alt="">
+    <img class="flora-l" src="_assets/lavender.svg" alt="">
+    <img class="flora-r" src="_assets/lavender.svg" alt="">
   </div>
   <div class="say-card">
     <p>قالوا إن الجامعة مرحلة صعبة، مليئة بالعقبات، ولم يقولوا إنها رحلة يتعاقب فيها العسر واليسر، وتُصنع فيها الحكايات بينهما.</p>
@@ -546,8 +546,8 @@
 <!-- 9 كلمات متقاطعة -->
 <section class="page xw-page">
   <div class="flora-band" aria-hidden="true">
-    <img class="flora-l" src="_assets/flora-left.svg" alt="">
-    <img class="flora-r" src="_assets/flora-right.svg" alt="">
+    <img class="flora-l" src="_assets/lavender.svg" alt="">
+    <img class="flora-r" src="_assets/lavender.svg" alt="">
   </div>
   <h1 class="xw-title">الكلمات المتقاطعة</h1>
   <div class="xw-clues">
@@ -588,8 +588,8 @@
 <!-- 11 أهداف -->
 <section class="page goals-page">
   <div class="flora-band soft" aria-hidden="true">
-    <img class="flora-l" src="_assets/flora-left.svg" alt="">
-    <img class="flora-r" src="_assets/flora-right.svg" alt="">
+    <img class="flora-l" src="_assets/lavender.svg" alt="">
+    <img class="flora-r" src="_assets/lavender.svg" alt="">
   </div>
   <div class="stamp">اكتب أهدافك</div>
   <p class="goals-lead">مساحة مُخصّصة لتأطير البدايات؛ دوّن فيها أهدافك للسنة الجديدة، وأبرز النصائح والإلهامات التي استوقفتك خلال أسبوع المستجدين، ولا تنسَ كتابة رسالة تشجيعية لنفسك المستقبلية تقرأها بفخر عند نهاية رحلتك في جامعة تبوك.</p>
@@ -600,16 +600,16 @@
 <!-- 12 فاصل باستيل — بلا نص -->
 <section class="page bleed pastel">
   <div class="flora-band" aria-hidden="true">
-    <img class="flora-l" src="_assets/flora-left.svg" alt="">
-    <img class="flora-r" src="_assets/flora-right.svg" alt="">
+    <img class="flora-l" src="_assets/lavender.svg" alt="">
+    <img class="flora-r" src="_assets/lavender.svg" alt="">
   </div>
 </section>
 
 <!-- 13 دفتر -->
 <section class="page note-page">
   <div class="flora-band soft" aria-hidden="true">
-    <img class="flora-l" src="_assets/flora-left.svg" alt="">
-    <img class="flora-r" src="_assets/flora-right.svg" alt="">
+    <img class="flora-l" src="_assets/lavender.svg" alt="">
+    <img class="flora-r" src="_assets/lavender.svg" alt="">
   </div>
   <div class="spiral" aria-hidden="true"></div>
   <div class="note-label">ملاحظات · الأسبوع الأول</div>
@@ -620,8 +620,8 @@
 <!-- 14 دفتر -->
 <section class="page note-page">
   <div class="flora-band soft" aria-hidden="true">
-    <img class="flora-l" src="_assets/flora-left.svg" alt="">
-    <img class="flora-r" src="_assets/flora-right.svg" alt="">
+    <img class="flora-l" src="_assets/lavender.svg" alt="">
+    <img class="flora-r" src="_assets/lavender.svg" alt="">
   </div>
   <div class="spiral" aria-hidden="true"></div>
   <div class="note-label">رسالة إلى نفسي المستقبلية</div>
