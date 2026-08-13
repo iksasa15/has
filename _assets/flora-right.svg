@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 340" fill="none">
+  <!-- white / pale dots cloud -->
+  <g fill="#FFFFFF" opacity=".88">
+    <circle cx="268" cy="250" r="5"/><circle cx="286" cy="262" r="6.5"/><circle cx="304" cy="248" r="4.5"/>
+    <circle cx="248" cy="268" r="4"/><circle cx="272" cy="278" r="7"/><circle cx="296" cy="276" r="5"/>
+    <circle cx="318" cy="266" r="6"/><circle cx="332" cy="284" r="4.5"/><circle cx="258" cy="292" r="5.5"/>
+    <circle cx="284" cy="298" r="4"/><circle cx="310" cy="294" r="6.5"/><circle cx="340" cy="300" r="5"/>
+    <circle cx="236" cy="284" r="3.5"/><circle cx="224" cy="302" r="4.5"/><circle cx="252" cy="312" r="5"/>
+    <circle cx="278" cy="318" r="6"/><circle cx="306" cy="316" r="4"/><circle cx="328" cy="318" r="5.5"/>
+    <circle cx="348" cy="322" r="4"/><circle cx="300" cy="332" r="5"/><circle cx="270" cy="334" r="4.5"/>
+    <circle cx="238" cy="326" r="3.8"/>
+  </g>
+  <g fill="none" stroke="#FFFFFF" stroke-width="1.6" opacity=".7">
+    <circle cx="292" cy="256" r="4"/><circle cx="320" cy="288" r="3.5"/><circle cx="246" cy="300" r="3"/>
+  </g>
+  <!-- stems -->
+  <g stroke="#8FB07C" stroke-width="2.2" stroke-linecap="round">
+    <path d="M292 338 C280 250 250 170 218 96"/>
+    <path d="M318 338 C322 260 338 190 348 128"/>
+  </g>
+  <g fill="#8FB07C">
+    <ellipse cx="268" cy="210" rx="16" ry="5" transform="rotate(-40 268 210)"/>
+    <ellipse cx="332" cy="220" rx="14" ry="4.5" transform="rotate(32 332 220)"/>
+  </g>
+  <!-- daisy -->
+  <g transform="translate(218 96)">
+    <g fill="#F8B624">
+      <ellipse cx="0" cy="-28" rx="9" ry="22"/>
+      <ellipse cx="16" cy="-23" rx="9" ry="22" transform="rotate(40)"/>
+      <ellipse cx="26" cy="-8" rx="9" ry="22" transform="rotate(80)"/>
+      <ellipse cx="23" cy="10" rx="9" ry="22" transform="rotate(120)"/>
+      <ellipse cx="8" cy="24" rx="9" ry="22" transform="rotate(160)"/>
+      <ellipse cx="-10" cy="24" rx="9" ry="22" transform="rotate(200)"/>
+      <ellipse cx="-24" cy="10" rx="9" ry="22" transform="rotate(240)"/>
+      <ellipse cx="-26" cy="-8" rx="9" ry="22" transform="rotate(280)"/>
+      <ellipse cx="-16" cy="-23" rx="9" ry="22" transform="rotate(320)"/>
+    </g>
+    <circle cx="0" cy="0" r="11" fill="#C45A2A"/>
+    <circle cx="0" cy="0" r="6" fill="#651853"/>
+  </g>
+  <g transform="translate(348 128) scale(.78)">
+    <g fill="#F8B624">
+      <ellipse cx="0" cy="-28" rx="9" ry="22"/>
+      <ellipse cx="16" cy="-23" rx="9" ry="22" transform="rotate(40)"/>
+      <ellipse cx="26" cy="-8" rx="9" ry="22" transform="rotate(80)"/>
+      <ellipse cx="23" cy="10" rx="9" ry="22" transform="rotate(120)"/>
+      <ellipse cx="8" cy="24" rx="9" ry="22" transform="rotate(160)"/>
+      <ellipse cx="-10" cy="24" rx="9" ry="22" transform="rotate(200)"/>
+      <ellipse cx="-24" cy="10" rx="9" ry="22" transform="rotate(240)"/>
+      <ellipse cx="-26" cy="-8" rx="9" ry="22" transform="rotate(280)"/>
+      <ellipse cx="-16" cy="-23" rx="9" ry="22" transform="rotate(320)"/>
+    </g>
+    <circle cx="0" cy="0" r="11" fill="#C45A2A"/>
+    <circle cx="0" cy="0" r="6" fill="#651853"/>
+  </g>
+</svg>

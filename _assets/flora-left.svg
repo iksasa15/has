@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 320" fill="none">
+  <!-- blob -->
+  <path d="M0 250 C20 200 70 170 120 190 C160 205 150 250 180 270 C140 310 40 320 0 320 Z" fill="#B5C9E4" opacity=".85"/>
+  <!-- gold dashes -->
+  <g stroke="#F8B624" stroke-width="4" stroke-linecap="round" opacity=".9">
+    <path d="M12 268 h14 M32 268 h14 M52 268 h10"/>
+    <path d="M8 280 h14 M28 280 h14 M48 280 h14 M68 280 h8"/>
+    <path d="M16 292 h14 M36 292 h14 M56 292 h12"/>
+  </g>
+  <!-- stems -->
+  <g stroke="#5BB34E" stroke-width="2.4" stroke-linecap="round">
+    <path d="M78 318 C74 240 62 170 48 70"/>
+    <path d="M96 318 C98 230 118 150 148 62"/>
+    <path d="M118 318 C128 240 158 165 188 88"/>
+  </g>
+  <!-- leaves -->
+  <g fill="#5BB34E">
+    <ellipse cx="62" cy="210" rx="14" ry="5" transform="rotate(-32 62 210)"/>
+    <ellipse cx="112" cy="200" rx="13" ry="4.5" transform="rotate(28 112 200)"/>
+    <ellipse cx="148" cy="188" rx="12" ry="4.2" transform="rotate(18 148 188)"/>
+    <ellipse cx="88" cy="248" rx="11" ry="4" transform="rotate(-24 88 248)"/>
+  </g>
+  <!-- buds helper -->
+  <g fill="#7473B3">
+    <!-- sprig 1 -->
+    <ellipse cx="50" cy="108" rx="5" ry="8"/><ellipse cx="42" cy="96" rx="5" ry="8" transform="rotate(-18 42 96)"/>
+    <ellipse cx="56" cy="92" rx="5" ry="8" transform="rotate(14 56 92)"/>
+    <ellipse cx="46" cy="80" rx="4.6" ry="7.4" transform="rotate(-8 46 80)"/>
+    <ellipse cx="54" cy="70" rx="4.4" ry="7" transform="rotate(10 54 70)"/>
+    <ellipse cx="48" cy="58" rx="4" ry="6.4"/>
+    <!-- sprig 2 -->
+    <ellipse cx="146" cy="100" rx="5.2" ry="8.2"/><ellipse cx="136" cy="88" rx="5" ry="8" transform="rotate(-16 136 88)"/>
+    <ellipse cx="154" cy="84" rx="5" ry="8" transform="rotate(16 154 84)"/>
+    <ellipse cx="140" cy="72" rx="4.8" ry="7.6" transform="rotate(-10 140 72)"/>
+    <ellipse cx="152" cy="64" rx="4.6" ry="7.2" transform="rotate(12 152 64)"/>
+    <ellipse cx="144" cy="52" rx="4.2" ry="6.6"/>
+    <ellipse cx="150" cy="42" rx="3.8" ry="6"/>
+    <!-- sprig 3 -->
+    <ellipse cx="186" cy="126" rx="5" ry="8"/><ellipse cx="176" cy="114" rx="4.8" ry="7.6" transform="rotate(-14 176 114)"/>
+    <ellipse cx="194" cy="112" rx="4.8" ry="7.6" transform="rotate(14 194 112)"/>
+    <ellipse cx="182" cy="100" rx="4.5" ry="7.2"/><ellipse cx="190" cy="90" rx="4.2" ry="6.8"/>
+    <ellipse cx="186" cy="78" rx="3.8" ry="6.2"/>
+  </g>
+  <g fill="#651853" opacity=".35">
+    <ellipse cx="48" cy="70" rx="2.2" ry="3.4"/>
+    <ellipse cx="146" cy="58" rx="2.2" ry="3.4"/>
+    <ellipse cx="186" cy="96" rx="2" ry="3"/>
+  </g>
+  <!-- bird -->
+  <g fill="#1F6A78" transform="translate(168 28) scale(1.15)">
+    <path d="M22 18 C10 8 2 14 0 20 C8 18 12 22 14 28 C18 22 28 16 38 18 C30 14 26 16 22 18 Z"/>
+    <path d="M14 18 C8 4 22 6 24 14 C20 12 16 14 14 18 Z"/>
+  </g>
+</svg>
